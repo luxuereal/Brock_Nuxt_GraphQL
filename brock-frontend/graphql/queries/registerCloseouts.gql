@@ -1,0 +1,7 @@
+#import '../fragments/registerCloseout.gql'
+
+query RegisterCloseouts($activePeriod: Boolean!) {
+  registerCloseouts(activePeriod: $activePeriod) {
+    ...RegisterCloseoutFragment
+  }
+}

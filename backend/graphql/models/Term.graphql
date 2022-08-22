@@ -1,0 +1,116 @@
+type Term {
+    "Unique primary key."
+    id: ID!
+
+    "Name."
+    name: String!
+
+    "Disc percent."
+    discPercent: Float! @rename(attribute: "disc_percent")
+
+    "Disc days."
+    discDays: Int! @rename(attribute: "disc_days")
+
+    "Vendors."
+    vendors: [Vendor!]!
+
+    "Name."
+    dueDays: String! @rename(attribute: "due_days")
+
+    "When the term was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the term was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateTermInput {
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "Disc percent."
+    discPercent: Float! @rename(attribute: "disc_percent") @rules(apply: ["required", "regex:/^\\d{1,3}(\\.\\d{1,6})?$/"])
+
+    "Disc days."
+    discDays: Int! @rename(attribute: "disc_days") @rules(apply: ["required"])
+
+    "Vendors."
+    vendors: CreateVendorBelongsToMany
+
+    "Name."
+    dueDays: String! @rules(apply: ["required", "max:255"]) @rename(attribute: "due_days")
+}
+
+input UpdateTermInput {
+    "Id."
+    id: ID! @eq
+
+    "Name."
+    name: String @rules(apply: ["filled", "max:255"])
+
+    "Disc percent."
+    discPercent: Float @rename(attribute: "disc_percent") @rules(apply: ["filled", "regex:/^\\d{1,3}(\\.\\d{1,6})?$/"])
+
+    "Disc days."
+    discDays: Int @rename(attribute: "disc_days") @rules(apply: ["filled"])
+
+    "Vendors."
+    vendors: CreateVendorBelongsToMany
+
+    "Name."
+    dueDays: String @rules(apply: ["filled", "max:255"]) @rename(attribute: "due_days")
+}
+
+input CreateVendorBelongsToMany {
+    "Sync existing id's."
+    sync: [ID!] @rules(apply: ["exists:vendors,id"])
+
+    "Sync existing id's without detaching."
+    syncWithoutDetaching: [ID!] @rules(apply: ["exists:vendors:terms,id"])
+
+    "Disconnect existing id's."
+    disconnect: [ID!] @rules(apply: ["exists:vendors:terms,id"])
+}
+
+extend type Query {
+    "List multiple terms."
+    terms: [Term!]! 
+        @all
+        @guard
+        @can(ability: "viewAny")
+    
+    "Get all of the terms by pagination."
+    termList: [Term!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new term."
+    createTerm(
+        "Term input."
+        termInput: CreateTermInput! @spread
+    ): Term 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing term."
+    updateTerm(
+        "Term input."
+        termInput: UpdateTermInput! @spread
+    ): Term 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing term."
+    deleteTerm(
+        "Id."
+        id: ID! @eq
+    ): Term 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

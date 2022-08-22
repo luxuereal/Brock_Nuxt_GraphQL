@@ -1,0 +1,21 @@
+#import '../fragments/state.gql'
+
+query StateList($page: Int!) {
+  stateList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...StateFragment
+    }
+  }
+}

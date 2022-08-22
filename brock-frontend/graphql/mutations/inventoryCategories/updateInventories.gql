@@ -1,0 +1,11 @@
+#import '../../fragments/inventoryCategory.gql'
+
+mutation UpdateInventories($inventoriesInput: [InventoryInput!]!) {
+  updateInventories(inventoriesInput: $inventoriesInput) {
+    status
+    message
+    category {
+      ...InventoryCategoryFragment
+    }
+  }
+}

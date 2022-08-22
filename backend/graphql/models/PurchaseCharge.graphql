@@ -1,0 +1,58 @@
+type PurchaseCharge {
+    "Unique primary key."
+    id: ID!
+
+    "Amount."
+    amount: Float!
+
+    "Gl ACcount."
+    glAccount: GlAccount
+
+    "Inventory category."
+    inventoryCategory: InventoryCategory
+
+    "Purchase."
+    purchase: Purchase
+
+    "When the purchase charge was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the purchase charge was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreatePurchaseChargeInput {
+    "Gl Account."
+    glAccount: ConnectBelongsToGlAccount!
+
+    "Inventory category."
+    inventoryCategory: ConnectBelongsToInventoryCategory
+
+    "Amount."
+    amount: Float! @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+}
+
+input UpdatePurchaseChargeInput {
+    "Id."
+
+    id: ID!
+
+    "Gl Account."
+    glAccount: ConnectBelongsToGlAccount
+
+    "Inventory category."
+    inventoryCategory: ConnectBelongsToInventoryCategory
+
+    "Amount."
+    amount: Float @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+}
+
+input ConnectBelongsToGlAccount {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:gl_accounts,id"])
+}
+
+input ConnectBelongsToInventoryCategory {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:inventory_categories,id"])
+}

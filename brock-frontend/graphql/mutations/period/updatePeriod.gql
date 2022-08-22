@@ -1,0 +1,5 @@
+mutation UpdatePeriod($periodInput: UpdatePeriodInput!) {
+  updatePeriod(periodInput: $periodInput) {
+    id
+  }
+}

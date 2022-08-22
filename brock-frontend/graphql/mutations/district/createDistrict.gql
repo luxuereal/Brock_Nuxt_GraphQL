@@ -1,0 +1,5 @@
+mutation CreateDistrict($districtInput: CreateDistrictInput!) {
+  createDistrict(districtInput: $districtInput) {
+    id
+  }
+}

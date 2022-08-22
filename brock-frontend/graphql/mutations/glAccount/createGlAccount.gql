@@ -1,0 +1,5 @@
+mutation CreateGlAccount($GlAccountInput: CreateGlAccountInput!) {
+  createGlAccount(GlAccountInput: $GlAccountInput) {
+    id
+  }
+}

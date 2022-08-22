@@ -1,0 +1,5 @@
+mutation CreateExpenseType($expenseTypeInput: CreateExpenseTypeInput!) {
+  createExpenseType(expenseTypeInput: $expenseTypeInput) {
+    id
+  }
+}

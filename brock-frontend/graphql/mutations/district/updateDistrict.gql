@@ -1,0 +1,5 @@
+mutation UpdateDistrict($districtInput: UpdateDistrictInput!) {
+  updateDistrict(districtInput: $districtInput) {
+    id
+  }
+}

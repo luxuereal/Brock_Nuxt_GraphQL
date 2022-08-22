@@ -1,0 +1,5 @@
+mutation DeleteRegisterCloseout($id: ID!) {
+  deleteRegisterCloseout(id: $id) {
+    id
+  }
+}

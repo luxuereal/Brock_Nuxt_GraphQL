@@ -1,0 +1,3 @@
+mutation reAccrual($id: ID!) {
+  reAccrual(id: $id)
+}

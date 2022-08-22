@@ -1,0 +1,21 @@
+#import '../fragments/period.gql'
+
+query PeriodList($page: Int!) {
+  periodList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...PeriodFragment
+    }
+  }
+}

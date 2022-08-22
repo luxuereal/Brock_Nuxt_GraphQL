@@ -1,0 +1,5 @@
+mutation deleteCalculationCode($id: ID!) {
+  deleteCalculationCode(id: $id) {
+    id
+  }
+}

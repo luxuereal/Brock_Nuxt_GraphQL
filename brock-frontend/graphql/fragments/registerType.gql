@@ -1,0 +1,4 @@
+fragment RegisterTypeFragment on RegisterType {
+  id
+  name
+}

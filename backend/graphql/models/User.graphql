@@ -1,0 +1,216 @@
+scalar Upload
+@scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
+"Account of a person who utilizes this application."
+type User {
+    "Unique primary key."
+    id: ID!
+
+    "The Profile Avatar"
+    avatar: String
+
+    "Non-unique first name."
+    firstName: String! @rename(attribute: "first_name")
+
+    "Non-unique last name."
+    lastName: String! @rename(attribute: "last_name")
+
+    "Selected unit."
+    selectedUnit: Unit @method(name: "selectedUnit")
+
+    "Unique email address."
+    email: String!
+
+    "The units that belongs to user."
+    units: [Unit!]!
+
+    "If user is admin role."
+    isAdmin: Boolean! @rename(attribute: "is_admin")
+
+    "If user is active"
+    isActive: Boolean! @rename(attribute: "is_active")
+
+    "When the email was verified."
+    email_verified_at: DateTime
+
+    "When the account was created."
+    created_at: DateTime!
+
+    "When the account was last updated."
+    updated_at: DateTime!
+
+    "role data"
+    role: Role
+}
+
+input UpdateProfileInput {
+    "The Profile Avatar"    
+    avatar: Upload
+
+    "Non-unique first name."
+    firstName: String! @rename(attribute: "first_name") @rules(apply: ["required", "max:255"])
+
+    "Non-unique last name."
+    lastName: String! @rename(attribute: "last_name") @rules(apply: ["max:255"])
+
+    "Unique email address."
+    email: String! @rules(apply: ["required", "max:255", "email"])
+
+    "Password"
+    password: String!
+}
+
+input CreateUserInput {
+    "Non-unique first name."
+    firstName: String! @rename(attribute: "first_name") @rules(apply: ["required", "max:255"])
+
+    "Non-unique last name."
+    lastName: String! @rename(attribute: "last_name") @rules(apply: ["max:255"])
+
+    "Unique email address."
+    email: String! @rules(apply: ["required", "unique:users,email", "max:255", "email"])
+
+    "Connect units that belongs to user."
+    units: CreateOrUpdateUnitBelongsToMany
+    
+    "Password"
+    password: String! @rules(apply: ["required"])
+    
+    "If user is admin role."
+    isAdmin: Boolean! @rename(attribute: "is_admin")
+
+    "If user is active"
+    isActive: Boolean! @rename(attribute: "is_active")
+    
+    "RoleID for the user's role"
+    roleID: ID @rename(attribute: "role_id")
+}
+
+input UpdateUserInput @validator {
+    "Unique primary key."
+    id: ID! @eq
+    
+    "Non-unique first name."
+    firstName: String @rename(attribute: "first_name") @rules(apply: ["required", "max:255"])
+
+    "Non-unique last name."
+    lastName: String @rename(attribute: "last_name") @rules(apply: ["max:255"])
+
+    "Unique email address."
+    email: String @rules(apply: ["required", "max:255", "email"])
+
+    "Connect units that belongs to user."
+    units: CreateOrUpdateUnitBelongsToMany
+    
+    "Password"
+    password: String
+    
+    "If user is admin role."
+    isAdmin: Boolean @rename(attribute: "is_admin")
+
+    "If user is active"
+    isActive: Boolean @rename(attribute: "is_active")
+
+    "RoleID for the user's role"
+    roleID: ID @rename(attribute: "role_id")
+}
+
+input CreateOrUpdateUnitBelongsToMany @validator {
+    "Sync existing id's."
+    sync: [ID!]
+
+    "Sync existing id's without detaching."
+    syncWithoutDetaching: [ID!]
+
+    "Disconnect existing id's."
+    disconnect: [ID!]
+}
+
+type CreateUserResponse {
+    "Status."
+    status: UserCreateStatus!
+
+    "Message."
+    message: String!
+}
+
+type UpdateUserResponse {
+    "Status."
+    status: UserUpdateStatus!
+
+    "Message."
+    message: String!
+}
+
+type UpdateProfileResponse {
+    "Status."
+    status: Boolean!
+
+    "Message."
+    message: String!
+}
+
+type RolePrivileges {
+    slugName: String
+    permissionType: PermissionType
+}
+
+extend type Query {
+    RolePrivileges: [RolePrivileges!]! @guard
+
+    "Find a single user by an identifying attribute."
+    user(
+      "Search by primary key."
+      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+
+      "Search by email address."
+      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
+    ): User @find @guard @can(ability: "view")
+
+    "List multiple users."
+    users(
+      "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
+      name: String @where(operator: "like")
+    ): [User!]! @all @guard @can(ability: "viewAny")
+
+    "Get all of the users by pagination."
+    userList: [User!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+
+    "Return currently authenticated user."
+    me: User! @guard @auth
+}
+
+extend type Mutation {
+    "Select unit"
+    selectUnit(
+      "Unit id."
+      id: ID!
+    ): Unit @guard @can(ability: "selectUnit", injectArgs: true)
+    
+    "Create a new user."
+    createUser(
+        "User."
+        userInput: CreateUserInput! @spread
+    ): CreateUserResponse! @guard @can(ability: "create", model: "User")
+    
+    "Update existing user."
+    updateUser(
+        "User."
+        userInput: UpdateUserInput! @spread
+    ): UpdateUserResponse! @guard @can(ability: "update", model: "User", query: true)
+    
+    "Delete an existing user."
+    deleteUser(
+        "Id."
+        id: ID! @eq
+    ): User @delete @guard @can(ability: "delete", model: "User", query: true)
+
+    "Update Profile of the User - firstName, lastName, email, password"
+    updateProfile(
+        "UpdateProfileInput"
+        profileInput: UpdateProfileInput! @spread
+    ): UpdateProfileResponse! @guard
+}

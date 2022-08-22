@@ -1,0 +1,7 @@
+#import '../fragments/period.gql'
+
+query Periods($hasUnits: Boolean!) {
+  periods(hasUnits: $hasUnits) {
+    ...PeriodFragment
+  }
+}

@@ -1,0 +1,7 @@
+fragment CalculationCodeFragment on CalculationCode {
+  id
+  code
+  description
+  createdAt
+  updatedAt
+}

@@ -1,0 +1,5 @@
+mutation UpdateCalculationCode($calculationCodeInput: UpdateCalculationCodeInput!) {
+  updateCalculationCode(calculationCodeInput: $calculationCodeInput) {
+    id
+  }
+}

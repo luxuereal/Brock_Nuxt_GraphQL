@@ -1,0 +1,19 @@
+"Menu Basic Data"
+type Menu {
+    id: ID!
+    name: String!
+    slugName: String! @rename(attribute: "slug_name")
+    hasViewCapability: Boolean! @rename(attribute: "has_view_capability")
+    hasCreateCapability: Boolean! @rename(attribute: "has_create_capability")
+    hasManageCapability: Boolean! @rename(attribute: "has_manage_capability")
+    roleMenus: [RoleMenu!]!
+}
+
+extend type Query {
+    "Get a single Menu by an ID"
+    menu (
+        id: ID! @eq
+    ): Menu @find @guard @can(ability: "view", query: true)
+    "All menus."
+    menus: [Menu!]! @all @guard @can(ability: "viewAny")
+}

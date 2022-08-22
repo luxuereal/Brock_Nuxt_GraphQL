@@ -1,0 +1,7 @@
+fragment DistrictFragment on District {
+  id
+  code
+  name
+  createdAt
+  updatedAt
+}

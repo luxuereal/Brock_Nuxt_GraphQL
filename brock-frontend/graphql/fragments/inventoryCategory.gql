@@ -1,0 +1,14 @@
+#import './glAccount.gql'
+
+fragment InventoryCategoryFragment on InventoryCategory {
+  id
+  name
+  vending
+  glAccount {
+    ...GlAccountFragment
+  }
+  inventoryAmount {
+    current
+    previous
+  }
+}

@@ -1,0 +1,6 @@
+mutation CreateCallLabor($amount: String!, $comments: String!) {
+  createCallLabor(expenseInput: {amount: $amount, comments: $comments}) {
+    status
+    message
+  }
+}

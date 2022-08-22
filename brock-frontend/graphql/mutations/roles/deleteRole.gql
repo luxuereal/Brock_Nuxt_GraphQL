@@ -1,0 +1,8 @@
+mutation deleteRole($id: ID!) {
+  deleteRole(roleInput: {
+    roleID: $id
+  }) {
+    status
+    message
+  }
+}

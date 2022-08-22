@@ -1,0 +1,5 @@
+mutation DeleteVendor($id: ID!) {
+  deleteVendor(id: $id) {
+    id
+  }
+}

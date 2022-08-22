@@ -1,0 +1,6 @@
+query RolePrivileges {
+  RolePrivileges {
+    slugName
+    permissionType
+  }
+}

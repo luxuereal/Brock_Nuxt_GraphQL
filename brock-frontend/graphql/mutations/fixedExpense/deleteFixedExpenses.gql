@@ -1,0 +1,5 @@
+mutation deleteFixedExpense($id: ID!) {
+  deleteFixedExpense(id: $id) {
+    id
+  }
+}

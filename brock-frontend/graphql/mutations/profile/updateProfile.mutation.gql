@@ -1,0 +1,6 @@
+mutation UpdateProfile($profileInput: UpdateProfileInput!) {
+    updateProfile(profileInput: $profileInput) {
+        status
+        message
+    }
+}

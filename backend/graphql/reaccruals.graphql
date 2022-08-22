@@ -1,0 +1,11 @@
+extend type Query {
+    "Reaccruals from the previous period."
+    reAccruals: [Expense!]! @guard
+}
+
+extend type Mutation {
+    "Reaccrual."
+    reAccrual(
+        id: ID!
+    ): Boolean @guard
+}

@@ -1,0 +1,5 @@
+mutation CreateUnitType($unitTypeInput: CreateUnitTypeInput!) {
+  createUnitType(unitTypeInput: $unitTypeInput) {
+    id
+  }
+}

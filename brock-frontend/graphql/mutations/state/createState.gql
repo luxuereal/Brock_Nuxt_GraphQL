@@ -1,0 +1,5 @@
+mutation CreateState($stateInput: CreateStateInput!) {
+  createState(stateInput: $stateInput) {
+    id
+  }
+}

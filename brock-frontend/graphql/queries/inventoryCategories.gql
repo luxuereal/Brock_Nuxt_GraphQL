@@ -1,0 +1,7 @@
+#import '../fragments/inventoryCategory.gql'
+
+query InventoryCategories($vending: String) {
+  inventoryCategories(vending: $vending) {
+    ...InventoryCategoryFragment
+  }
+}

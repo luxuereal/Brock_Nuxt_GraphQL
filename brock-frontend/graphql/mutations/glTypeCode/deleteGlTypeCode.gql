@@ -1,0 +1,5 @@
+mutation deleteGlTypeCode($id: ID!) {
+  deleteGlTypeCode(id: $id) {
+    id
+  }
+}

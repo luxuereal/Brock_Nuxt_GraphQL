@@ -1,0 +1,84 @@
+"Relation between Role and Menu"
+type RoleMenu {
+    id: ID!
+    role: Role
+    menu: Menu
+    isView: Boolean! @rename(attribute: "is_view")
+    isCreate: Boolean! @rename(attribute: "is_create")
+    isModify: Boolean! @rename(attribute: "is_modify")
+}
+
+"PermissionSetting to manage Role-Permission"
+input PermissionSetting {
+    menuID: ID! @rename(attribute: "menu_id")
+    isView: Boolean! @rename(attribute: "is_view")
+    isCreate: Boolean! @rename(attribute: "is_create")
+    isModify: Boolean! @rename(attribute: "is_modify")
+}
+"Create Role-Permission Data"
+input CreateRoleInput {
+    roleName: String! @rename(attribute: "role_name") @rules(apply: ["required", "unique:roles,name"])
+    permissions: [PermissionSetting!]! @rules(apply: ["required"])
+}
+type CreateRoleResponse {
+    status: Boolean!
+    message: String!
+}
+"Update Role-Permission Data"
+input UpdateRoleInput {
+    roleID: ID! @rename(attribute: "role_id") @rules(apply: ["required"])
+    roleName: String! @rename(attribute: "role_name") @rules(apply: ["required"])
+    permissions: [PermissionSetting!]! @rules(apply: ["required"])
+}
+type UpdateRoleResponse {
+    status: Boolean!
+    message: String!
+}
+"Delete Role-Permission Data"
+input DeleteRoleInput {
+    roleID: ID! @rename(attribute: "role_id") @rules(apply: ["required"])
+}
+type DeleteRoleResponse {
+    status: Boolean!
+    message: String!
+}
+
+"Check if the user has Menu-Permission"
+input CheckPermissionInput {
+    slugName: String! @rename(attribute: "slug_name") @rules(apply: ["required"])
+    permissionType: PermissionType! @rename(attribute: "permission_type") @rules(apply: ["required"])
+}
+type CheckPermissionResponse {
+    status: Boolean!
+    message: String!
+    permission: Boolean
+}
+
+extend type Query {
+    "Get a single RoleMenu by an ID"
+    roleMenu (
+        id: ID! @eq
+    ): RoleMenu! @find @guard @can(ability: "view", query: true)
+    "All role-menus"
+    roleMenus: [RoleMenu!]! @all @guard @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new role."
+    createRole (
+        roleInput: CreateRoleInput! @spread
+    ): CreateRoleResponse! @guard @can(ability: "create", model: "RoleMenu")
+    "Update an existing role."
+    updateRole (
+        roleInput: UpdateRoleInput! @spread
+    ): UpdateRoleResponse! @guard @can(ability: "update", model: "RoleMenu", query: true)
+    "Delete an existing role."
+    deleteRole (
+        roleInput: DeleteRoleInput! @spread
+    ): DeleteRoleResponse! @guard @can(ability: "delete", model: "RoleMenu", query: true)
+
+    "Check if the user has menu-permission"
+    checkPermission (
+        input: CheckPermissionInput! @spread
+    ): CheckPermissionResponse! @guard @can(ability: "view", model: "RoleMenu", query: true)
+}

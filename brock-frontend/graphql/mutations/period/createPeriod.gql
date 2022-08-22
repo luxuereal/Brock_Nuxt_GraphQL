@@ -1,0 +1,5 @@
+mutation CreatePeriod($periodInput: CreatePeriodInput!) {
+  createPeriod(periodInput: $periodInput) {
+    id
+  }
+}

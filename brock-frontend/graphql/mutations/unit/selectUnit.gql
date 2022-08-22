@@ -1,0 +1,5 @@
+mutation selectUnit($id: ID!) {
+  selectUnit(id: $id) {
+    id
+  }
+}

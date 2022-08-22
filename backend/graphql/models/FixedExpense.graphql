@@ -1,0 +1,116 @@
+type FixedExpense {
+    "Unique primary key."
+    id: ID!
+    
+    "The unit associated with fixed expense."
+    unit: Unit
+    
+    "Comments"
+    comments: String!
+
+    "Monthly."
+    monthly: Boolean!
+    
+    "Gl account"
+    glAccount: GlAccount
+    
+    "Amount"
+    amount: String!
+    
+    "When the fixed expense was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the fixed expense was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateFixedExpenseInput {
+    "Comments"
+    comments: String! @rules(apply: ["required", "max:255"])
+
+    "Gl account"
+    glAccount: ConnectBelongsToGlAccount! @rules(apply: ["required"])
+    
+    "Amount"
+    amount: String! @rules(apply: ["required", "max:255"])
+    
+    "Monthly"
+    monthly: Boolean! @rules(apply: ["required"])
+}
+
+input UpdateFixedExpenseInput {
+    "Unique primary key."
+    id: ID! @eq
+    
+    "Comments"
+    comments: String @rules(apply: ["filled", "max:255"])
+
+    "Gl account"
+    glAccount: ConnectBelongsToGlAccount
+    
+    "Amount"
+    amount: String @rules(apply: ["filled", "max:255"])
+    
+    "Monthly"
+    monthly: Boolean @rules(apply: ["filled"])
+}
+
+input ConnectBelongsToGlAccount {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:gl_accounts,id"])
+}
+
+extend type Query {
+    "List multiple fixed expenses."
+    fixedExpenses: [FixedExpense!]! 
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all of the fixed expenses by pagination."
+    fixedExpenseList: [FixedExpense!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+
+    "List multiple fixed expenses. Only belongs to User->selected_unit" 
+    FixedExpenses(
+      "Get the user-selected unit's fixed expenses"
+      unit_id: ID! @eq @rules(apply: ["required", "exists:units,id"])
+    ): [FixedExpense!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new fixed expense."
+    createFixedExpense(
+        "Fixed expense."
+        fixedExpenseInput: CreateFixedExpenseInput! @spread
+    ): FixedExpense 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing fixed expense."
+    updateFixedExpense(
+        "Fixed expense."
+        fixedExpenseInput: UpdateFixedExpenseInput! @spread
+    ): FixedExpense 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing fixed expense."
+    deleteFixedExpense(
+        "Id."
+        id: ID! @eq
+    ): FixedExpense 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+
+    "Close week"
+    closeWeek: Boolean! @guard
+}

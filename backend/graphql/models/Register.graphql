@@ -1,0 +1,145 @@
+type Register {
+    "Unique primary key."
+    id: ID!
+
+    "Code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "Whether the register is active."
+    isActive: Boolean! @rename(attribute: "is_active")
+
+    "If non resetable is reseted."
+    resetNonResetable: Boolean! @rename(attribute: "reset_non_resetable")
+
+    "Bank."
+    bank: Float!
+
+    "Non resetable."
+    nonResetable: Float! @rename(attribute: "non_resetable")
+
+    "Commission."
+    commission: Float!
+
+    "Register type."
+    registerType: RegisterType
+
+    "Unit."
+    unit: Unit 
+
+    "When the register was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the register was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateRegisterInput {
+    "Code."
+    code: String! @rules(apply: ["required", "unique:registers,code", "max:255"])
+
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "Whether the register is active."
+    isActive: Boolean! @rename(attribute: "is_active")
+
+    "If non resetable is reseted."
+    resetNonResetable: Boolean! @rename(attribute: "reset_non_resetable")
+
+    "Bank."
+    bank: Float! @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Non resetable."
+    nonResetable: Float! @rename(attribute: "non_resetable") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Commission."
+    commission: Float! @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Register type."
+    registerType: ConnectBelongsToRegisterType!
+
+    "Unit."
+    unit: ConnectBelongsToUnit!
+}
+
+input UpdateRegisterInput @validator {
+    "Unique primary key."
+    id: ID! @eq
+
+    "Code."
+    code: String
+
+    "Name."
+    name: String
+
+    "Whether the register is active."
+    isActive: Boolean @rename(attribute: "is_active")
+
+    "If non resetable is reseted."
+    resetNonResetable: Boolean @rename(attribute: "reset_non_resetable")
+
+    "Bank."
+    bank: Float
+
+    "Non resetable."
+    nonResetable: Float @rename(attribute: "non_resetable")
+
+    "Commission."
+    commission: Float
+
+    "Register type."
+    registerType: ConnectBelongsToRegisterType
+
+    "Unit."
+    unit: ConnectBelongsToUnit
+}
+
+input ConnectBelongsToRegisterType {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:register_types,id"])
+}
+
+input ConnectBelongsToUnit {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:units,id"])
+}
+
+extend type Query {
+    "List multiple registers."
+    registers: [Register!]! 
+        @all
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new register."
+    createRegister(
+        "Register input."
+        registerInput: CreateRegisterInput! @spread
+    ): Register 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing register."
+    updateRegister(
+        "Register input."
+        registerInput: UpdateRegisterInput! @spread
+    ): Register 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing register."
+    deleteRegister(
+        "Id."
+        id: ID! @eq
+    ): Register 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

@@ -1,0 +1,7 @@
+#import '../fragments/purchase.gql'
+
+query Purchases($activePeriod: Boolean!) {
+  purchases(activePeriod: $activePeriod) {
+    ...PurchaseFragment
+  }
+}

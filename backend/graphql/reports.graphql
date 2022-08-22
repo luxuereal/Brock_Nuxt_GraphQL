@@ -1,0 +1,193 @@
+input registerCloseoutCalculationInput {
+    "Register id."
+    registerId: ID! @rename(attribute: "register_id")
+
+    "Unit id"
+    unitId: Float! @rename(attribute: "unit_id")
+    
+    "Period id"
+    periodId: Float! @rename(attribute: "period_id")
+    
+    "Requested fields"
+    fields: registerCloseoutCalculationFieldsRequest!
+}
+
+input registerCloseoutCalculationFieldsRequest {
+    "Non resetable"
+    nonResetable: Float! @rename(attribute: "non_resetable")
+    
+    "NetOV"
+    NetOV: Float! @rename(attribute: "net_o_v")
+    
+    "Net charge"
+    netCharge: Float! @rename(attribute: "net_charge")
+    
+    "Tax from the tape"
+    taxFromTheTape: Float! @rename(attribute: "tax_from_the_tape")
+    
+    "Net voucher"
+    netVoucher: Float! @rename(attribute: "net_voucher")
+    
+    "Overring void tax"
+    overringVoidTax: Float! @rename(attribute: "overring_void_tax")
+    
+    "Charge tax"
+    chargeTax: Float! @rename(attribute: "charge_tax")
+    
+    "Voucher tax"
+    voucherTax: Float! @rename(attribute: "voucher_tax")
+    
+    "Total petty cash"
+    totalPettyCash: Float! @rename(attribute: "total_petty_cash")
+    
+    "Actual cash deposit"
+    actualCashDeposit: Float! @rename(attribute: "actual_cash_deposit")
+    
+    "Customer count breakfast"
+    customerCountBreakfast: Float! @rename(attribute: "customer_count_breakfast")
+    
+    "Net sales breakfast"
+    netSalesBreakfast: Float! @rename(attribute: "net_sales_breakfast")
+    
+    "Customer count lunch"
+    customerCountLunch: Float! @rename(attribute: "customer_count_lunch")
+    
+    "Net sales lunch"
+    netSalesLunch: Float! @rename(attribute: "net_sales_lunch")
+    
+    "Customer count dinner"
+    customerCountDinner: Float! @rename(attribute: "customer_count_dinner")
+    
+    "Net sales dinner"
+    netSalesDinner: Float! @rename(attribute: "net_sales_dinner")
+}
+
+type registerCloseoutCalculationResponse {
+    "Fields."
+    fields: registerCloseoutCalculationFieldsResponse!
+
+    "Statistics."
+    statistics: registerCloseoutCalculationStatisticsResponse!
+}
+
+type registerCloseoutCalculationFieldsResponse {
+    "Net total"
+    netTotal: Float! @rename(attribute: "net_total")
+    
+    "Last non resettable"
+    lastNonResettable: Float! @rename(attribute: "last_non_resettable")
+    
+    "Total to distribute"
+    totalToDistribute: Float! @rename(attribute: "total_to_distribute")
+    
+    "Net cash"
+    netCash: Float! @rename(attribute: "net_cash")
+    
+    "Cash tax"
+    cashTax: Float! @rename(attribute: "cash_tax")
+    
+    "Calculated cash deposit"
+    calculatedCashDeposit: Float! @rename(attribute: "calculated_cash_deposit")
+    
+    "Over short"
+    overShort: Float! @rename(attribute: "over_short")
+    
+    "Customer count totals"
+    customerCountTotals: Float! @rename(attribute: "customer_count_totals")
+    
+    "Net sales total"
+    netSalesTotal: Float! @rename(attribute: "net_sales_total")
+}
+
+type registerCloseoutCalculationStatisticsResponse {
+    "Total daily deposit"
+    totalDailyDeposit: Float! @rename(attribute: "total_daily_deposit")
+    
+    "Total net sales"
+    totalNetSales: Float! @rename(attribute: "total_net_sales")
+    
+    "Charge"
+    charge: Float!
+    
+    "Cash total"
+    cashTotal: Float! @rename(attribute: "cash_total")
+    
+    "Cash tax"
+    cashTax: Float! @rename(attribute: "cash_tax")
+    
+    "Petty cash"
+    pettyCash: Float! @rename(attribute: "petty_cash")
+    
+    "Calced deposit"
+    calcedDeposit: Float! @rename(attribute: "calced_deposit")
+    
+    "Actual deposit"
+    actualDeposit: Float! @rename(attribute: "actual_deposit")
+    
+    "Over short"
+    overShort: Float! @rename(attribute: "over_short")
+}
+
+extend type Mutation {
+    "Close register calculation."
+    registerCloseoutCalculation(
+        "Close register calculation."
+        registerCloseoutCalculationInput: registerCloseoutCalculationInput! @spread
+    ): registerCloseoutCalculationResponse @guard
+}
+
+input ExportDataInput {
+    "Period."
+    period: ID! @rules(apply: ["exists:periods,id"])
+
+    "Units."
+    units: [ID!]! @rules(apply: ["exists:units,id"])
+
+    "Type."
+    type: ExportType!
+}
+
+input MultiUnitLaborInput {
+    "Period."
+    period: ID! @rules(apply: ["exists:periods,id"])
+
+    "Units."
+    units: [ID!]! @rules(apply: ["exists:units,id"])
+
+    "District."
+    district: ID! @rules(apply: ["exists:districts,id"])
+}
+
+input OperatingReportInput {
+    "Period."
+    period: ID! @rules(apply: ["exists:periods,id"])
+
+    "Units."
+    unit: ID! @rules(apply: ["exists:units,id"])
+
+    "Type."
+    type: OperatingType!
+
+    "Type period."
+    typePeriod: OperatingPeriodType
+}
+
+extend type Mutation {
+    "Export data."
+    exportData(
+        "Export data input."
+        input: ExportDataInput! @spread 
+    ): String! @guard
+
+    "Multi unit labor."
+    multiUnitLabor(
+        "Multi unit labor input."
+        input: MultiUnitLaborInput! @spread
+    ): String! @guard
+
+    "Operating report."
+    operatingReport(
+        "Operating report input."
+        input: OperatingReportInput! @spread
+    ): String! @guard
+}

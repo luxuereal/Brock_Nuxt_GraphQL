@@ -1,0 +1,22 @@
+#import '../fragments/vendor.gql'
+#import '../fragments/term.gql'
+
+query VendorList($page: Int!, $search: String) {
+  VendorList(page: $page, code: $search) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...VendorFragment
+    }
+  }
+}

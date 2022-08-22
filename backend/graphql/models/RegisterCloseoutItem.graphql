@@ -1,0 +1,35 @@
+type RegisterCloseoutItem {
+    "Unique primary key."
+    id: ID!
+    
+    "Gl Account id."
+    glAccountId: Int! @rename(attribute: "gl_account_id")
+    
+    "Amount."
+    amount: String!
+
+    "When the catering order item was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the catering order item was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateRegisterCloseoutItemInput {
+    "Gl Account id."
+    glAccountId: Int! @rename(attribute: "gl_account_id") @rules(apply: ["required"])
+
+    "Amount."
+    amount: String! @rules(apply: ["required", "regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+}
+
+input UpdateRegisterCloseoutItemInput {
+    "Id."
+    id: ID!
+
+    "Gl Account id."
+    glAccountId: Int! @rename(attribute: "gl_account_id") @rules(apply: ["filled"])
+
+    "Amount."
+    amount: String! @rules(apply: ["filled", "regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+}

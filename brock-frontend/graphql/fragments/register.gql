@@ -1,0 +1,17 @@
+fragment RegisterFragment on Register {
+  id
+  code
+  name
+  isActive
+  resetNonResetable
+  bank
+  nonResetable
+  commission
+  registerType {
+    id
+    name
+  }
+  unit {
+    id
+  }
+}

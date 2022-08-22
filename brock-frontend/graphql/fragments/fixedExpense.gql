@@ -1,0 +1,11 @@
+#import './glAccount.gql'
+
+fragment FixedExpenseFragment on FixedExpense {
+  id
+  comments
+  monthly
+  glAccount {
+    ...GlAccountFragment
+  }
+  amount
+}

@@ -1,0 +1,78 @@
+type District {
+    "Unique primary key."
+    id: ID!
+
+    "Code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "When the district was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the distrcit was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateDistrictInput {
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "Name."
+    code: String! @rules(apply: ["required", "max:255"])
+}
+
+input UpdateDistrictInput {
+    "Id."
+    id: ID! @eq
+
+    "Name."
+    code: String @rules(apply: ["filled", "max:255"])
+
+    "Name."
+    name: String @rules(apply: ["filled", "max:255"])
+}
+
+extend type Query {
+    "List multiple districts."
+    districts: [District!]! 
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all of the districts by pagination."
+    districtList: [District!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new district."
+    createDistrict(
+        "District input."
+        districtInput: CreateDistrictInput! @spread
+    ): District 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing district."
+    updateDistrict(
+        "District input."
+        districtInput: UpdateDistrictInput! @spread
+    ): District 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing district."
+    deleteDistrict(
+        "Id."
+        id: ID! @eq
+    ): District 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

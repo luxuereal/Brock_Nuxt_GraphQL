@@ -1,0 +1,92 @@
+type County {
+    "Unique primary key."
+    id: ID!
+
+    "The state that owns the county."
+    state: State
+
+    "Name."
+    name: String!
+
+    "Tax."
+    tax: Float!
+    
+    "When the county was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the county was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateCountyInput {
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "State."
+    state: ConnectBelongsToState!
+
+    "Tax."
+    tax: Float! @rules(apply: ["required", "numeric", "between:0,100"])
+}
+
+input UpdateCountyInput {
+    "Id."
+    id: ID! @eq
+
+    "Name."
+    name: String @rules(apply: ["filled", "max:255"])
+
+    "State."
+    state: ConnectBelongsToState
+
+    "Tax."
+    tax: Float @rules(apply: ["filled", "numeric", "between:0,100"])
+}
+
+input ConnectBelongsToState {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:states,id"])
+}
+
+extend type Query {
+    "List multiple counties."
+    counties: [County!]! 
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all of the counties by pagination."
+    countyList: [County!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new county."
+    createCounty(
+        "County input."
+        countyInput: CreateCountyInput! @spread
+    ): County 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing county."
+    updateCounty(
+        "County input."
+        countyInput: UpdateCountyInput! @spread
+    ): County 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing county."
+    deleteCounty(
+        "Id."
+        id: ID! @eq
+    ): County 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

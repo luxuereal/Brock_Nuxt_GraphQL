@@ -1,0 +1,21 @@
+#import '../fragments/unit.gql'
+
+query UnitList($page: Int!, $search: String) {
+  unitList(page: $page, code: $search) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...UnitFragment
+    }
+  }
+}

@@ -1,0 +1,21 @@
+#import '../fragments/term.gql'
+
+query TermList($page: Int!) {
+  termList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...TermFragment
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation UpdateGlAccount($GlAccountInput: UpdateGlAccountInput!) {
+  updateGlAccount(GlAccountInput: $GlAccountInput) {
+    id
+  }
+}

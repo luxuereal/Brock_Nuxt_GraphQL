@@ -1,0 +1,7 @@
+#import '../fragments/unit.gql'
+
+query Unit($id: ID!) {
+  unit(id: $id) {
+    ...UnitFragment
+  }
+}

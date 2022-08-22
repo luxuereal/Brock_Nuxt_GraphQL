@@ -1,0 +1,7 @@
+#import '../fragments/expense.gql'
+
+query ReAccruals {
+  reAccruals {
+    ...ExpenseFragment
+  }
+}

@@ -1,0 +1,104 @@
+type Vendor {
+    "Unique primary key."
+    id: ID!
+
+    "Code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "The term that owns the vendor."
+    terms: [Term!]!
+
+    "When the vendor was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the vendor was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateVendorInput {
+    "Code."
+    code: String! @rules(apply: ["required", "max:255"])
+
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "Terms."
+    terms: CreateTermBelongsToMany
+}
+
+input UpdateVendorInput {
+    "Id."
+    id: ID! @eq
+
+    "Code."
+    code: String @rules(apply: ["filled", "max:255"])
+
+    "Name."
+    name: String @rules(apply: ["filled", "max:255"])
+
+    "Terms."
+    terms: CreateTermBelongsToMany
+}
+
+input CreateTermBelongsToMany{
+    "Sync existing id's."
+    sync: [ID!] @rules(apply: ["exists:terms,id"])
+
+    "Sync existing id's without detaching."
+    syncWithoutDetaching: [ID!] @rules(apply: ["exists:terms,id"])
+
+    "Disconnect existing id's."
+    disconnect: [ID!] @rules(apply: ["exists:terms,id"])
+}
+
+extend type Query {
+    "List multiple vendors."
+    vendors(
+        code: String @where(operator: "like") @rules(apply: ["max:255"])
+    ): [Vendor!]!
+        @all
+        @guard
+        @orderBy(column: "name", direction: ASC)
+        @can(ability: "viewAny")
+
+    "Get all of the vendors by pagination."
+    VendorList(
+        code: String @where(operator: "like") @rules(apply: ["max:255"])
+    ): [Vendor!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @orderBy(column: "name", direction: ASC)
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new vendor."
+    createVendor(
+        "Vendor input."
+        vendorInput: CreateVendorInput! @spread
+    ): Vendor
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing vendor."
+    updateVendor(
+        "Vendor input."
+        vendorInput: UpdateVendorInput! @spread
+    ): Vendor
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing vendor."
+    deleteVendor(
+        "Id."
+        id: ID! @eq
+    ): Vendor
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

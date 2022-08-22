@@ -1,0 +1,7 @@
+#import '../fragments/menu.gql'
+
+query Menus {
+  menus {
+    ...MenuFragment
+  }
+}

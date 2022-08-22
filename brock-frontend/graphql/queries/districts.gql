@@ -1,0 +1,7 @@
+#import '../fragments/district.gql'
+
+query Districts {
+  districts {
+    ...DistrictFragment
+  }
+}

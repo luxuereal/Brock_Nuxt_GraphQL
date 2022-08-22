@@ -1,0 +1,5 @@
+fragment ExpenseTypeFragment on ExpenseType {
+  id
+  type
+  description
+}

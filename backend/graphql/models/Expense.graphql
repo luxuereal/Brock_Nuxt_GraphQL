@@ -1,0 +1,154 @@
+type Expense {
+    "Unique primary key."
+    id: ID!
+    
+    "The unit associated with expense."
+    unit: Unit
+
+    "The period associated with register closeout."
+    period: Period
+
+    "The user associated with register closeout."
+    user: User
+    
+    "Comments"
+    comments: String!
+
+    "Vendor."
+    vendor: Vendor
+    
+    "Expense date"
+    expenseDate: Date! @rename(attribute: "expense_date")
+    
+    "Gl account"
+    glAccount: GlAccount
+    
+    "Expense type"
+    expenseType: ExpenseType
+    
+    "Amount"
+    amount: String!
+    
+    "When the expense was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the expense was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateExpenseInput {
+    "Comments"
+    comments: String! @rules(apply: ["required", "max:255"])
+
+    "Vendor."
+    vendor: ConnectBelongsToVendor
+    
+    "Expense date"
+    expenseDate: Date! @rename(attribute: "expense_date") @rules(apply: ["required"])
+    
+    "Gl account"
+    glAccount: ConnectBelongsToGlAccount! @rules(apply: ["required"])
+    
+    "Expense type"
+    expenseType: ConnectBelongsToExpenseType! @rules(apply: ["required"])
+    
+    "Amount"
+    amount: String! @rules(apply: ["required", "max:255"])
+}
+
+input UpdateExpenseInput {
+    "Unique primary key."
+    id: ID! @eq
+    
+    "Comments"
+    comments: String @rules(apply: ["filled", "max:255"])
+
+    "Vendor."
+    vendor: ConnectBelongsToVendor
+    
+    "Expense date"
+    expenseDate: Date @rename(attribute: "expense_date") @rules(apply: ["filled"])
+    
+    "Gl account"
+    glAccount: ConnectBelongsToGlAccount
+    
+    "Expense type"
+    expenseType: ConnectBelongsToExpenseType
+    
+    "Amount"
+    amount: String @rules(apply: ["filled", "max:255"])
+}
+
+input ConnectBelongsToVendor {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:vendors,id"])
+}
+
+input ConnectBelongsToGlAccount {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:gl_accounts,id"])
+}
+
+input ConnectBelongsToExpenseType {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:expense_types,id"])
+}
+
+extend type Query {
+    "List multiple expenses."
+    expenses(
+        activePeriod: Boolean @scope
+    ): [Expense!]!
+        @all
+        # @whereAuth(relation: "user")
+}
+
+input CreateCallLaborInput {
+    "Amount"
+    amount: String! @rules(apply: ["required"])
+
+    "Comments"
+    comments: String! @rules(apply: ["required", "max:255"])
+
+}
+type CreateCallLaborResponse {
+    status: Boolean!
+    message: String!
+}
+
+extend type Mutation {
+    "Create a call-labor"
+    createCallLabor(
+        expenseInput: CreateCallLaborInput! @spread
+    ): CreateCallLaborResponse
+        @guard
+
+    "Create a new expense."
+    createExpense(
+        "Register closeout."
+        expenseInput: CreateExpenseInput! @spread
+    ): Expense 
+        @create
+        @guard
+        @can(ability: "create", injectArgs: true)
+        @inject(context: "user.id", name: "user_id")
+
+    "Update an existing expense."
+    updateExpense(
+        "Expense."
+        expenseInput: UpdateExpenseInput! @spread
+    ): Expense 
+        @update
+        @guard
+        @inject(context: "user.id", name: "user_id")
+        @can(ability: "update", query: true, injectArgs: true)
+
+    "Delete an existing expense."
+    deleteExpense(
+        "Id."
+        id: ID! @eq
+    ): Expense 
+        @delete
+        @guard
+        @can(ability: "delete", query: true, injectArgs: true)
+}

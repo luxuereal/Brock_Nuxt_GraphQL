@@ -1,0 +1,5 @@
+mutation DeleteTerm($id: ID!) {
+  deleteTerm(id: $id) {
+    id
+  }
+}

@@ -1,0 +1,38 @@
+type Inventory {
+    "Unique primary key."
+    id: ID!
+
+    "Amount."
+    amount: Float!
+
+    "When the inventory was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the inventory was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input InventoryInput {
+    "Id." 
+    id: ID! @rules(apply: ["required", "exists:inventory_categories,id"])
+
+    "Amount."
+    amount: Float! @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+}
+
+type InventoryPemssionResponse {
+    "Status."
+    status: Boolean
+
+    "Response Message."
+    message: String
+
+    "Inventory Category List."
+    category: [InventoryCategory!]!
+}
+
+extend type Mutation {
+    updateInventories(
+        inventoriesInput: [InventoryInput!]!
+    ): InventoryPemssionResponse @guard
+}

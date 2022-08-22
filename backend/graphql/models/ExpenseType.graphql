@@ -1,0 +1,84 @@
+type ExpenseType {
+    "Unique primary key."
+    id: ID!
+
+    "Expense type name."
+    type: String!
+
+    "Description"
+    description: String!
+
+    "Associated expenses"
+    expenses: [Expense!]!
+
+    "When the expense type was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the expense type was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateExpenseTypeInput {
+    "Expense type name."
+    type: String! @rules(apply: ["required"])
+
+    "Description"
+    description: String! @rules(apply: ["required"])
+}
+
+input UpdateExpenseTypeInput {
+    "Id."
+    id: ID! @eq
+
+    "Expense type name."
+    type: String! @rules(apply: ["required"])
+
+    "Description"
+    description: String! @rules(apply: ["required"])
+}
+
+extend type Query {
+    "List multiple expense types."
+    expenseTypes: [ExpenseType!]!
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all of the periods by pagination."
+    expenseTypeList: [ExpenseType!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+
+    "List multiple expense types. Except Fixed, OnCall, ReAccrual, Reversal" 
+    ExpenseTypes: [ExpenseType!]! @guard @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new expenseType."
+    createExpenseType(
+        "ExpenseType input."
+        expenseTypeInput: CreateExpenseTypeInput! @spread
+    ): ExpenseType
+    @create
+    @guard
+    @can(ability: "create")
+
+    "Update an existing expenseType."
+    updateExpenseType(
+        "ExpenseType input."
+        expenseTypeInput: UpdateExpenseTypeInput! @spread
+    ): ExpenseType
+    @update
+    @guard
+    @can(ability: "update", query: true)
+
+    "Delete an existing expenseType."
+    deleteExpenseType(
+        "Id."
+        id: ID! @eq
+    ): ExpenseType
+    @delete
+    @guard
+    @can(ability: "delete", query: true)
+}

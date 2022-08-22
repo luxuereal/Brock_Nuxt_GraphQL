@@ -1,0 +1,78 @@
+type CalculationCode {
+    "Unique primary key."
+    id: ID!
+
+    "Code."
+    code: String!
+
+    "Description."
+    description: String!
+
+    "When the calculation code was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the calculation code was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateCalculationCodeInput {
+    "Code."
+    code: String! @rules(apply: ["required", "unique:calculation_codes,code", "max:255"])
+
+    "Description."
+    description: String! @rules(apply: ["required", "max:255"])
+}
+
+input UpdateCalculationCodeInput {
+    "Id."
+    id: ID! @eq
+
+    "Code."
+    code: String! @rules(apply: ["required", "max:255"])
+
+    "Description."
+    description: String! @rules(apply: ["required", "max:255"])
+}
+
+extend type Query {
+    "List multiple calculation codes."
+    calculationCodes: [CalculationCode!]!
+    @all
+    @guard
+    @can(ability: "viewAny")
+
+    "Get all of the calculation codes by pagination."
+    calculationCodeList: [CalculationCode!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new calculation code."
+    createCalculationCode(
+        "CalculationCode input."
+        calculationCodeInput: CreateCalculationCodeInput! @spread
+    ): CalculationCode
+    @create
+    @guard
+    @can(ability: "create")
+
+    "Update an existing calculationCode."
+    updateCalculationCode(
+        "CalculationCode input."
+        calculationCodeInput: UpdateCalculationCodeInput! @spread
+    ): CalculationCode
+    @update
+    @guard
+    @can(ability: "update", query: true)
+
+    "Delete an existing calculationCode."
+    deleteCalculationCode(
+        "Id."
+        id: ID! @eq
+    ): CalculationCode
+    @delete
+    @guard
+    @can(ability: "delete", query: true)
+}

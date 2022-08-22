@@ -1,0 +1,11 @@
+#import './menu.gql'
+
+fragment RoleMenuFragment on RoleMenu {
+  id
+  menu {
+    ...MenuFragment
+  }
+  isView
+  isCreate
+  isModify
+}

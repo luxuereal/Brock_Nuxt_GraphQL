@@ -1,0 +1,15 @@
+#import '../fragments/glAccount.gql'
+
+query UserGlAccounts {
+  UserGlAccounts {
+    ...GlAccountFragment
+    parent {
+      id
+      name
+    }
+    child {
+      id
+      name
+    }
+  }
+}

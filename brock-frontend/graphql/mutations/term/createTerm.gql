@@ -1,0 +1,5 @@
+mutation CreateTerm($termInput: CreateTermInput!) {
+  createTerm(termInput: $termInput) {
+    id
+  }
+}

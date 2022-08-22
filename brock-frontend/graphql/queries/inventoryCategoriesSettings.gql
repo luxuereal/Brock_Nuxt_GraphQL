@@ -1,0 +1,7 @@
+#import '../fragments/inventoryCategorySetting.gql'
+
+query InventoryCategories {
+  inventoryCategories {
+    ...inventoryCategorySettingFragment
+  }
+}

@@ -1,0 +1,92 @@
+type RegisterType {
+    "Unique primary key."
+    id: ID!
+
+    "Name."
+    name: String!
+
+    "Description."
+    description: String!
+
+    "The registers for the register type."
+    registers: [Register!]!
+
+    "Tax type."
+    taxType: String! @rename(attribute: "tax_type")
+
+    "Whether the register type is vending."
+    isVending: Boolean! @rename(attribute: "is_vending")
+
+    "When the register type was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the register type was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateRegisterTypeInput {
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "Description."
+    description: String! @rules(apply: ["required", "max:255"])
+
+    "Tax type."
+    taxType: String! @rename(attribute: "tax_type") @rules(apply: ["required", "max:255"])
+
+    "Whether the register type is vending."
+    isVending: Boolean! @rename(attribute: "is_vending")
+}
+
+input UpdateRegisterTypeInput {
+    "Id."
+    id: ID! @eq
+
+    "Name."
+    name: String @rules(apply: ["filled", "max:255"])
+
+    "Description."
+    description: String @rules(apply: ["filled", "max:255"])
+
+    "Tax type."
+    taxType: String @rename(attribute: "tax_type") @rules(apply: ["filled", "max:255"])
+
+    "Whether the register type is vending."
+    isVending: Boolean @rename(attribute: "is_vending") @rules(apply: ["filled"])
+}
+
+extend type Query {
+    "List multiple register types."
+    registerTypes: [RegisterType!]! 
+        @all
+        @guard
+}
+
+extend type Mutation {
+    "Create a new register type."
+    createRegisterType(
+        "Register type input."
+        registerTypeInput: CreateRegisterTypeInput! @spread
+    ): RegisterType 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing register type."
+    updateRegisterType(
+        "Register type input."
+        registerTypeInput: UpdateRegisterTypeInput! @spread
+    ): RegisterType 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing register type."
+    deleteRegisterType(
+        "Id."
+        id: ID! @eq
+    ): RegisterType 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

@@ -1,0 +1,21 @@
+#import '../fragments/fixedExpense.gql'
+
+query FixedExpensesFiltered($page: Int!, $unit_id: ID!) {
+  FixedExpenses(page: $page, unit_id: $unit_id) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+       ...FixedExpenseFragment
+    }
+  }
+}

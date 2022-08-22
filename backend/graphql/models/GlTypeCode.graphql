@@ -1,0 +1,73 @@
+type GlTypeCode {
+    "Unique primary key."
+    id: ID!
+
+    "Code."
+    code: String!
+
+    "Description."
+    description: String!
+
+    "When the gl type code was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the gl type code was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateGlTypeCodeInput {
+    "Code."
+    code: String! @rules(apply: ["required", "max:255"])
+
+    "Description."
+    description: String! @rules(apply: ["required", "max:255"])
+}
+
+input UpdateGlTypeCodeInput {
+    "Id."
+    id: ID! @eq
+
+    "Code."
+    code: String @rules(apply: ["filled", "max:255"])
+
+    "Description."
+    description: String @rules(apply: ["filled", "max:255"])
+}
+
+extend type Query {
+    "List multiple gl type codes."
+    glTypeCodes(
+        code: String @where(operator: "like") @rules(apply: ["max:255"])
+    ): [GlTypeCode!]! 
+        @all
+        @guard
+}
+
+extend type Mutation {
+    "Create a new Gl type code."
+    createGlTypeCode(
+        "Gl type code."
+        GlTypeCodeInput: CreateGlTypeCodeInput! @spread
+    ): GlTypeCode 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing Gl type code."
+    updateGlTypeCode(
+        "Gl type code."
+        GlTypeCodeInput: UpdateGlTypeCodeInput! @spread
+    ): GlTypeCode 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing Gl type code."
+    deleteGlTypeCode(
+        "Id."
+        id: ID! @eq
+    ): GlTypeCode 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

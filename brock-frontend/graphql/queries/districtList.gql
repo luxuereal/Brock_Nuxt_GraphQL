@@ -1,0 +1,21 @@
+#import '../fragments/district.gql'
+
+query DistrictList($page: Int!) {
+  districtList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...DistrictFragment
+    }
+  }
+}

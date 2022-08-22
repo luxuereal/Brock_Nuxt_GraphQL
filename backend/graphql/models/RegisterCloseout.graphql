@@ -1,0 +1,329 @@
+type RegisterCloseout {
+    "Unique primary key."
+    id: ID!
+    
+    "The register associated with register closeout."
+    register: Register
+    
+    "The register closeout items for the register closeout."
+    items: [RegisterCloseoutItem!]!
+    
+    "The unit associated with register closeout."
+    unit: Unit
+
+    "The period associated with register closeout."
+    period: Period
+
+    "The user associated with register closeout."
+    user: User
+    
+    "Non resetable."
+    nonResetable: String! @rename(attribute: "non_resetable")
+    
+    "Net total."
+    netTotal: String! @rename(attribute: "net_total")
+    
+    "Last non resetable."
+    lastNonResetable: String! @rename(attribute: "last_non_resetable")
+    
+    "Net OV."
+    netOV: String! @rename(attribute: "net_o_v")
+    
+    "Total to distribute."
+    totalToDistribute: String! @rename(attribute: "total_to_distribute")
+    
+    "Net charge."
+    netCharge: String! @rename(attribute: "net_charge")
+    
+    "Tax from the tape."
+    taxFromTheTape: String! @rename(attribute: "tax_from_the_tape")
+    
+    "Net voucher."
+    netVoucher: String! @rename(attribute: "net_voucher")
+    
+    "Overring void tax."
+    overringVoidTax: String! @rename(attribute: "overring_void_tax")
+    
+    "Net cash."
+    netCash: String! @rename(attribute: "net_cash")
+    
+    "Charge tax."
+    chargeTax: String! @rename(attribute: "charge_tax")
+    
+    "Voucher tax."
+    voucherTax: String! @rename(attribute: "voucher_tax")
+    
+    "Cash tax."
+    cashTax: String! @rename(attribute: "cash_tax")
+    
+    "Total petty cash."
+    totalPettyCash: String! @rename(attribute: "total_petty_cash")
+    
+    "Actual cash deposit."
+    actualCashDeposit: String! @rename(attribute: "actual_cash_deposit")
+    
+    "Calculated cash deposit."
+    calculatedCashDeposit: String! @rename(attribute: "calculated_cash_deposit")
+    
+    "Over short."
+    overShort: String! @rename(attribute: "over_short")
+    
+    "Customer count breakfast."
+    customerCountBreakfast: String! @rename(attribute: "customer_count_breakfast")
+    
+    "Net sales breakfast."
+    netSalesBreakfast: String! @rename(attribute: "net_sales_breakfast")
+    
+    "Customer count lunch."
+    customerCountLunch: String! @rename(attribute: "customer_count_lunch")
+    
+    "Net sales lunch."
+    netSalesLunch: String! @rename(attribute: "net_sales_lunch")
+    
+    "Customer count dinner."
+    customerCountDinner: String! @rename(attribute: "customer_count_dinner")
+    
+    "Net sales dinner."
+    netSalesDinner: String! @rename(attribute: "net_sales_dinner")
+    
+    "Customer count totals."
+    customerCountTotals: String! @rename(attribute: "customer_count_totals")
+    
+    "Net sales totals."
+    netSalesTotals: String! @rename(attribute: "net_sales_totals")
+
+    "Close date"
+    closeDate: Date! @rename(attribute: "close_date")
+    
+    "When the payroll was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the payroll was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateRegisterCloseoutInput {
+    "Non resetable."
+    nonResetable: String! @rename(attribute: "non_resetable") @rules(apply: ["required", "max:255"])
+    
+    "Net total."
+    netTotal: String! @rename(attribute: "net_total") @rules(apply: ["required", "max:255"])
+    
+    "Last non resetable."
+    lastNonResetable: String! @rename(attribute: "last_non_resetable") @rules(apply: ["required", "max:255"])
+    
+    "Net OV."
+    netOV: String! @rename(attribute: "net_o_v") @rules(apply: ["required", "max:255"])
+    
+    "Total to distribute."
+    totalToDistribute: String! @rename(attribute: "total_to_distribute") @rules(apply: ["required", "max:255"])
+    
+    "Net charge."
+    netCharge: String! @rename(attribute: "net_charge") @rules(apply: ["required", "max:255"])
+    
+    "Tax from the tape."
+    taxFromTheTape: String! @rename(attribute: "tax_from_the_tape") @rules(apply: ["required", "max:255"])
+    
+    "Net voucher."
+    netVoucher: String! @rename(attribute: "net_voucher") @rules(apply: ["required", "max:255"])
+    
+    "Overring void tax."
+    overringVoidTax: String! @rename(attribute: "overring_void_tax") @rules(apply: ["required", "max:255"])
+    
+    "Net cash."
+    netCash: String! @rename(attribute: "net_cash") @rules(apply: ["required", "max:255"])
+    
+    "Charge tax."
+    chargeTax: String! @rename(attribute: "charge_tax") @rules(apply: ["required", "max:255"])
+    
+    "Voucher tax."
+    voucherTax: String! @rename(attribute: "voucher_tax") @rules(apply: ["required", "max:255"])
+    
+    "Cash tax."
+    cashTax: String! @rename(attribute: "cash_tax") @rules(apply: ["required", "max:255"])
+    
+    "Total petty cash."
+    totalPettyCash: String! @rename(attribute: "total_petty_cash") @rules(apply: ["required", "max:255"])
+    
+    "Actual cash deposit."
+    actualCashDeposit: String! @rename(attribute: "actual_cash_deposit") @rules(apply: ["required", "max:255"])
+    
+    "Calculated cash deposit."
+    calculatedCashDeposit: String! @rename(attribute: "calculated_cash_deposit") @rules(apply: ["required", "max:255"])
+    
+    "Over short."
+    overShort: String! @rename(attribute: "over_short") @rules(apply: ["required", "max:255"])
+    
+    "Customer count breakfast."
+    customerCountBreakfast: String! @rename(attribute: "customer_count_breakfast") @rules(apply: ["required", "max:255"])
+    
+    "Net sales breakfast."
+    netSalesBreakfast: String! @rename(attribute: "net_sales_breakfast") @rules(apply: ["required", "max:255"])
+    
+    "Customer count lunch."
+    customerCountLunch: String! @rename(attribute: "customer_count_lunch") @rules(apply: ["required", "max:255"])
+    
+    "Net sales lunch."
+    netSalesLunch: String! @rename(attribute: "net_sales_lunch") @rules(apply: ["required", "max:255"])
+    
+    "Customer count dinner."
+    customerCountDinner: String! @rename(attribute: "customer_count_dinner") @rules(apply: ["required", "max:255"])
+    
+    "Net sales dinner."
+    netSalesDinner: String! @rename(attribute: "net_sales_dinner") @rules(apply: ["required", "max:255"])
+    
+    "Customer count totals."
+    customerCountTotals: String! @rename(attribute: "customer_count_totals") @rules(apply: ["required", "max:255"])
+    
+    "Net sales totals."
+    netSalesTotals: String! @rename(attribute: "net_sales_totals") @rules(apply: ["required", "max:255"])
+
+    "Close date"
+    closeDate: Date! @rename(attribute: "close_date") @rules(apply: ["required"])
+    
+    "Items."
+    items: UpdateRegisterCloseoutItems
+    
+    "Register"
+    register: ConnectBelongsToRegister
+}
+
+input UpdateRegisterCloseoutInput {
+    "Unique primary key."
+    id: ID! @eq
+    
+    "Non resetable."
+    nonResetable: String @rename(attribute: "non_resetable") @rules(apply: ["filled", "max:255"])
+    
+    "Net total."
+    netTotal: String @rename(attribute: "net_total") @rules(apply: ["filled", "max:255"])
+    
+    "Last non resetable."
+    lastNonResetable: String @rename(attribute: "last_non_resetable") @rules(apply: ["filled", "max:255"])
+    
+    "Net OV."
+    netOV: String @rename(attribute: "net_o_v") @rules(apply: ["filled", "max:255"])
+    
+    "Total to distribute."
+    totalToDistribute: String @rename(attribute: "total_to_distribute") @rules(apply: ["filled", "max:255"])
+    
+    "Net charge."
+    netCharge: String @rename(attribute: "net_charge") @rules(apply: ["filled", "max:255"])
+    
+    "Tax from the tape."
+    taxFromTheTape: String @rename(attribute: "tax_from_the_tape") @rules(apply: ["filled", "max:255"])
+    
+    "Net voucher."
+    netVoucher: String @rename(attribute: "net_voucher") @rules(apply: ["filled", "max:255"])
+    
+    "Overring void tax."
+    overringVoidTax: String @rename(attribute: "overring_void_tax") @rules(apply: ["filled", "max:255"])
+    
+    "Net cash."
+    netCash: String @rename(attribute: "net_cash") @rules(apply: ["filled", "max:255"])
+    
+    "Charge tax."
+    chargeTax: String @rename(attribute: "charge_tax") @rules(apply: ["filled", "max:255"])
+    
+    "Voucher tax."
+    voucherTax: String @rename(attribute: "voucher_tax") @rules(apply: ["filled", "max:255"])
+    
+    "Cash tax."
+    cashTax: String @rename(attribute: "cash_tax") @rules(apply: ["filled", "max:255"])
+    
+    "Total petty cash."
+    totalPettyCash: String @rename(attribute: "total_petty_cash") @rules(apply: ["filled", "max:255"])
+    
+    "Actual cash deposit."
+    actualCashDeposit: String @rename(attribute: "actual_cash_deposit") @rules(apply: ["filled", "max:255"])
+    
+    "Calculated cash deposit."
+    calculatedCashDeposit: String @rename(attribute: "calculated_cash_deposit") @rules(apply: ["filled", "max:255"])
+    
+    "Over short."
+    overShort: String @rename(attribute: "over_short") @rules(apply: ["filled", "max:255"])
+    
+    "Customer count breakfast."
+    customerCountBreakfast: String @rename(attribute: "customer_count_breakfast") @rules(apply: ["filled", "max:255"])
+    
+    "Net sales breakfast."
+    netSalesBreakfast: String @rename(attribute: "net_sales_breakfast") @rules(apply: ["filled", "max:255"])
+    
+    "Customer count lunch."
+    customerCountLunch: String @rename(attribute: "customer_count_lunch") @rules(apply: ["filled", "max:255"])
+    
+    "Net sales lunch."
+    netSalesLunch: String @rename(attribute: "net_sales_lunch") @rules(apply: ["filled", "max:255"])
+    
+    "Customer count dinner."
+    customerCountDinner: String @rename(attribute: "customer_count_dinner") @rules(apply: ["filled", "max:255"])
+    
+    "Net sales dinner."
+    netSalesDinner: String @rename(attribute: "net_sales_dinner") @rules(apply: ["filled", "max:255"])
+    
+    "Customer count totals."
+    customerCountTotals: String @rename(attribute: "customer_count_totals") @rules(apply: ["filled", "max:255"])
+    
+    "Net sales totals."
+    netSalesTotals: String @rename(attribute: "net_sales_totals") @rules(apply: ["filled", "max:255"])
+
+    "Close date"
+    closeDate: Date @rename(attribute: "close_date") @rules(apply: ["filled"])
+    
+    "Items."
+    items: UpdateRegisterCloseoutItems
+}
+
+input ConnectBelongsToRegister {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:registers,id"])
+}
+
+input UpdateRegisterCloseoutItems {
+    create: [CreateRegisterCloseoutItemInput!]
+    
+    update: [UpdateRegisterCloseoutItemInput!]
+
+    delete: [ID!]
+}
+
+extend type Query {
+    "List multiple register closeouts."
+    registerCloseouts(
+        activePeriod: Boolean @scope
+    ): [RegisterCloseout!]! 
+        @all
+        @guard
+        @whereAuth(relation: "user")
+}
+
+extend type Mutation {
+    "Create a new register closeout."
+    createRegisterCloseout(
+        "Register closeout."
+        registerCloseoutInput: CreateRegisterCloseoutInput! @spread
+    ): RegisterCloseout 
+        @create 
+        @guard
+        @can(ability: "create")
+        @inject(context: "user.id", name: "user_id")
+
+    "Update an existing register closeout."
+    updateRegisterCloseout(
+        "Register closeout."
+        registerCloseoutInput: UpdateRegisterCloseoutInput! @spread
+    ): RegisterCloseout 
+        @update
+        @guard
+        @inject(context: "user.id", name: "user_id")
+        @can(ability: "update", query: true, injectArgs: true)
+
+    "Delete an existing register closeout."
+    deleteRegisterCloseout(
+        "Id."
+        id: ID! @eq
+    ): RegisterCloseout 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

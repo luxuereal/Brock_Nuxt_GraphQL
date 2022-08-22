@@ -1,0 +1,5 @@
+mutation UpdateTerm($termInput: UpdateTermInput!) {
+  updateTerm(termInput: $termInput) {
+    id
+  }
+}

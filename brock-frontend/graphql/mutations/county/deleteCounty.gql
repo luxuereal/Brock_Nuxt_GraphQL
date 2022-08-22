@@ -1,0 +1,5 @@
+mutation deleteCounty($id: ID!) {
+  deleteCounty(id: $id) {
+    id
+  }
+}

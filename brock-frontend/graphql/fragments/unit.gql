@@ -1,0 +1,92 @@
+#import './district.gql'
+#import './county.gql'
+#import './city.gql'
+#import './user.gql'
+#import './unitType.gql'
+#import './state.gql'
+#import './vendor.gql'
+#import './glAccount.gql'
+#import './period.gql'
+
+fragment UnitFragment on Unit {
+  id
+  code
+  name
+  address
+  emailAccount
+  zip
+  population
+  sysco
+  isActive
+  isVending
+  activePeriod {
+    id
+    periodEnd
+  }
+  users {
+    ...UserFragment
+  }
+  district {
+    ...DistrictFragment
+  }
+  county {
+    ...CountyFragment
+  }
+  city {
+    ...CityFragment
+    state {
+      ...StateFragment
+    }
+  }
+  startPeriod {
+    ...PeriodFragment
+  }
+  unitType {
+    ...UnitTypeFragment
+  }
+  vendors {
+    ...VendorFragment
+  }
+  glAccounts {
+    ...GlAccountFragment
+    parent {
+      id
+      name
+      glTypeCode {
+        id
+        description
+      }
+    }
+    child {
+      id
+      name
+    }
+  }
+  periods {
+    ...PeriodFragment
+  }
+  payrollPassword
+  managementPercent
+  managementAmount
+  managementFeeType
+  administrativePercent
+  administrativeAmount
+  administrativeFeeType
+  supportPercent
+  supportAmount
+  supportFeeType
+  payrollTaxPercent
+  benefitsPercent
+  benefitsAmount
+  vacationAmount
+  businessInsuranceAmount
+  vendingIncome
+  commissionAmount
+  commissionPercent
+  managerFirstName
+  managerLastName
+  isKronos
+  regTax {
+    ...GlAccountFragment
+  }
+}

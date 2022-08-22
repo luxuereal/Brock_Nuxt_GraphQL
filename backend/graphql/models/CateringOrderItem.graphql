@@ -1,0 +1,53 @@
+type CateringOrderItem {
+    "Unique primary key."
+    id: ID!
+
+    "Menu item."
+    menuItem: String! @rename(attribute: "menu_item")
+
+    "Quantity."
+    quantity: Int! 
+
+    "Price."
+    price: Float!
+
+    "Ext."
+    ext: Float!
+
+    "When the catering order item was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the catering order item was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateCateringOrderItemInput {
+    "Menut item."
+    menuItem: String! @rename(attribute: "menu_item") @rules(apply: ["required", "max:255"])
+
+    "Quantity."
+    quantity: Int!
+
+    "Price."
+    price: Float! @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Ext."
+    ext: Float! @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+}
+
+input UpdateCateringOrderItemInput {
+    "Id."
+    id: ID!
+
+    "Menut item."
+    menuItem: String @rename(attribute: "menu_item") @rules(apply: ["filled", "max:255"])
+
+    "Quantity."
+    quantity: Int
+
+    "Price."
+    price: Float @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Ext."
+    ext: Float @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+}

@@ -1,0 +1,5 @@
+mutation UpdateVendor($vendorInput: UpdateVendorInput!) {
+  updateVendor(vendorInput: $vendorInput) {
+    id
+  }
+}

@@ -1,0 +1,5 @@
+mutation CreateInventoryCategory($inventoryCategoryInput: CreateInventoryCategoryInput!) {
+  createInventoryCategory(inventoryCategoryInput: $inventoryCategoryInput) {
+    id
+  }
+}

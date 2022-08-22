@@ -1,0 +1,5 @@
+mutation UpdateCity($cityInput: UpdateCityInput!) {
+  updateCity(cityInput: $cityInput) {
+    id
+  }
+}

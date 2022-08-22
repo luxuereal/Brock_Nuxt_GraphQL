@@ -1,0 +1,7 @@
+fragment CateringOrderItemFragment on CateringOrderItem {
+  id
+  menuItem
+  quantity
+  price
+  ext
+}

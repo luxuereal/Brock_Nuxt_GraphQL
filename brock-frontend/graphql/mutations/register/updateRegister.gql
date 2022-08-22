@@ -1,0 +1,5 @@
+mutation UpdateRegister($registerInput: UpdateRegisterInput!) {
+  updateRegister(registerInput: $registerInput) {
+    id
+  }
+}

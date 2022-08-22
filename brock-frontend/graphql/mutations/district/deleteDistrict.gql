@@ -1,0 +1,5 @@
+mutation DeleteDistrict($id: ID!) {
+  deleteDistrict(id: $id) {
+    id
+  }
+}

@@ -1,0 +1,120 @@
+type State {
+    "Unique primary key."
+    id: ID!
+
+    "Code."
+    code: String!
+
+    "The counties for the state."
+    counties: [County!]!
+
+    "The cities for the state."
+    cities: [City!]!
+
+    "Sales tax cafeteria."
+    salesTaxCafeteria: Float! @rename(attribute: "sales_tax_cafeteria")
+
+    "Sales Tax Cafeteria."
+    salesTaxVending: Float! @rename(attribute: "sales_tax_vending")
+
+    "Sales Tax Cafeteria."
+    salesTaxRestaurant: Float! @rename(attribute: "sales_tax_restaurant")
+
+    "Sales Tax Cafeteria."
+    salesTaxStore: Float! @rename(attribute: "sales_tax_store")
+
+    "Sales Tax Cafeteria."
+    grossReceiptsTax: Float! @rename(attribute: "gross_receipts_tax")
+
+    "When the state was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the state was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateStateInput {
+    "Code."
+    code: String! @rules(apply: ["required"])
+
+    "Sales Tax Cafeteria."
+    salesTaxCafeteria: Float! @rename(attribute: "sales_tax_cafeteria") @rules(apply: ["required", "numeric", "between:0,100"])
+
+    "Sales Tax Cafeteria."
+    salesTaxVending: Float! @rename(attribute: "sales_tax_vending") @rules(apply: ["required", "numeric", "between:0,100"])
+
+    "Sales Tax Cafeteria."
+    salesTaxRestaurant: Float! @rename(attribute: "sales_tax_restaurant") @rules(apply: ["required", "numeric", "between:0,100"])
+
+    "Sales Tax Cafeteria."
+    salesTaxStore: Float! @rename(attribute: "sales_tax_store") @rules(apply: ["required", "numeric", "between:0,100"])
+
+    "Sales Tax Cafeteria."
+    grossReceiptsTax: Float! @rename(attribute: "gross_receipts_tax") @rules(apply: ["required", "numeric", "between:0,100"])
+}
+
+input UpdateStateInput {
+    "Id."
+    id: ID! @eq
+
+    "Code."
+    code: String @rules(apply: ["filled"])
+
+    "Sales Tax Cafeteria."
+    salesTaxCafeteria: Float @rename(attribute: "sales_tax_cafeteria") @rules(apply: ["filled", "numeric", "between:0,100"])
+
+    "Sales Tax Cafeteria."
+    salesTaxVending: Float @rename(attribute: "sales_tax_vending") @rules(apply: ["filled", "numeric", "between:0,100"])
+
+    "Sales Tax Cafeteria."
+    salesTaxRestaurant: Float @rename(attribute: "sales_tax_restaurant") @rules(apply: ["filled", "numeric", "between:0,100"])
+
+    "Sales Tax Cafeteria."
+    salesTaxStore: Float @rename(attribute: "sales_tax_store") @rules(apply: ["filled", "numeric", "between:0,100"])
+
+    "Sales Tax Cafeteria."
+    grossReceiptsTax: Float @rename(attribute: "gross_receipts_tax") @rules(apply: ["filled", "numeric", "between:0,100"])
+}
+
+extend type Query {
+    "List multiple states."
+    states: [State!]!
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all of the states by pagination."
+    stateList: [State!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new state."
+    createState(
+        "State input."
+        stateInput: CreateStateInput! @spread
+    ): State 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing state."
+    updateState(
+        "State input."
+        stateInput: UpdateStateInput! @spread
+    ): State 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing state."
+    deleteState(
+        "Id."
+        id: ID! @eq
+    ): State 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

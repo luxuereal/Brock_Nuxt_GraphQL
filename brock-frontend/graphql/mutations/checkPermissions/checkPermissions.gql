@@ -1,0 +1,7 @@
+mutation CheckPermission {
+  checkPermission(input: {slugName: "close-register", permissionType: CREATE}) {
+    status
+    message
+    permission
+  }
+}

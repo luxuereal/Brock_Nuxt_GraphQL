@@ -1,0 +1,491 @@
+type Unit {
+    "Unique primary key."
+    id: ID!
+
+    "Unique code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "Address."
+    address: String!
+
+    "Zip."
+    zip: String!
+
+    "Active period."
+    activePeriod: Period @method(name: "activePeriod")
+
+    "Whether the unit is active."
+    isActive: Boolean! @rename(attribute: "is_active")
+
+    "Whether the unit is vending."
+    isVending: Boolean! @rename(attribute: "is_vending")
+
+    "Period when the unit is created."
+    startPeriod: Period
+
+    "The periods that belongs to unit."
+    periods: [Period!]!
+
+    "The users that belongs to unit."
+    users: [User!]!
+
+    "The vendors that belongs to unit."
+    vendors: [Vendor!]!
+
+    "The gl accounts that belongs to unit."
+    glAccounts: [GlAccount!]!
+
+    "The unit type that owns the unit."
+    unitType: UnitType
+
+    "The district that owns the unit."
+    district: District
+
+    "The county that owns the unit."
+    county: County
+
+    "The city that own the unit."
+    city: City
+
+    "Payroll password."
+    payrollPassword: String @rename(attribute: "payroll_password")
+
+    "Email account."
+    emailAccount: String @rename(attribute: "email_account")
+
+    "Management percent."
+    managementPercent: Float @rename(attribute: "management_percent")
+
+    "Management amount."
+    managementAmount: Float @rename(attribute: "management_amount")
+
+    "Management fee type."
+    managementFeeType: String @rename(attribute: "management_fee_type")
+
+    "Administrative percent."
+    administrativePercent: Float @rename(attribute: "administrative_percent")
+
+    "Administrative amount."
+    administrativeAmount: Float @rename(attribute: "administrative_amount")
+
+    "Administrative fee type."
+    administrativeFeeType: String @rename(attribute: "administrative_fee_type")
+
+    "Support percent."
+    supportPercent: Float @rename(attribute: "support_percent")
+
+    "Support amount."
+    supportAmount: Float @rename(attribute: "support_amount")
+
+    "Support fee type."
+    supportFeeType: String @rename(attribute: "support_fee_type")
+
+    "Payroll tax percent."
+    payrollTaxPercent: Float @rename(attribute: "payroll_tax_percent")
+
+    "Benefits percent."
+    benefitsPercent: Float @rename(attribute: "benefits_percent")
+
+    "Benefits amount."
+    benefitsAmount: Float @rename(attribute: "benefits_amount")
+
+    "Vacation amount."
+    vacationAmount: Float @rename(attribute: "vacation_amount")
+
+    "Business unsurance amount."
+    businessInsuranceAmount: Float @rename(attribute: "business_insurance_amount")
+
+    "Vending income."
+    vendingIncome: Float @rename(attribute: "vending_income")
+
+    "Commission amount."
+    commissionAmount: Float @rename(attribute: "commission_amount")
+
+    "Commission percent."
+    commissionPercent: Float @rename(attribute: "commission_percent")
+
+    "Manager first name."
+    managerFirstName: String @rename(attribute: "manager_first_name")
+
+    "Manager last name."
+    managerLastName: String @rename(attribute: "manager_last_name")
+
+    "Population."
+    population: Int
+
+    "Whether the uni is kronos."
+    isKronos: Boolean @rename(attribute: "is_kronos")
+
+    "Reg Tax."
+    regTax: GlAccount
+
+    "Sysco."
+    sysco: String
+
+    "When the unit was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the unit was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateUnitInput {
+    "Unique code."
+    code: String! @rules(apply: ["required", "unique:units,code", "max:255"])
+
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "Address."
+    address: String! @rules(apply: ["required", "max:255"])
+
+    "Zip."
+    zip: String! @rules(apply: ["required", "max:255"])
+
+    "Whether the unit is active."
+    isActive: Boolean! @rename(attribute: "is_active")
+
+    "Whether the unit is vending."
+    isVending: Boolean! @rename(attribute: "is_vending")
+
+    "Users."
+    users: CreateUserBelongsToMany
+
+    "Vendors."
+    vendors: CreateVendorBelongsToMany
+
+    "Gl accounts."
+    glAccounts: CreateGlAccountBelongsToMany
+
+    "Unit type."
+    unitType: ConnectBelongsToUnitType
+
+    "District."
+    district: ConnectBelongsToDistrict!
+
+    "County."
+    county: ConnectBelongsToCounty!
+
+    "StartPeriod."
+    startPeriod: ConnectBelongsToPeriod!
+
+    "City."
+    city: ConnectBelongsToCity!
+
+    "Payroll password."
+    payrollPassword: String @rename(attribute: "payroll_password") @rules(apply: ["max:255"])
+
+    "Email account."
+    emailAccount: String @rename(attribute: "email_account") @rules(apply: ["filled", "email", "max:255"])
+
+    "Management percent."
+    managementPercent: Float @rename(attribute: "management_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Management amount."
+    managementAmount: Float @rename(attribute: "management_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Management fee type."
+    managementFeeType: String @rename(attribute: "management_fee_type") @rules(apply: ["required", "string", "exists:calculation_codes,code"])
+
+    "Administrative percent."
+    administrativePercent: Float @rename(attribute: "administrative_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Administrative amount."
+    administrativeAmount: Float @rename(attribute: "administrative_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Administrative fee type."
+    administrativeFeeType: String @rename(attribute: "administrative_fee_type") @rules(apply: ["required", "string", "exists:calculation_codes,code"])
+
+    "Support percent."
+    supportPercent: Float @rename(attribute: "support_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Support amount."
+    supportAmount: Float @rename(attribute: "support_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Support fee type."
+    supportFeeType: String @rename(attribute: "support_fee_type") @rules(apply: ["required", "string", "exists:calculation_codes,code"])
+
+    "Payroll tax percent."
+    payrollTaxPercent: Float @rename(attribute: "payroll_tax_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Benefits percent."
+    benefitsPercent: Float @rename(attribute: "benefits_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Benefits amount."
+    benefitsAmount: Float @rename(attribute: "benefits_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Vacation amount."
+    vacationAmount: Float @rename(attribute: "vacation_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Business unsurance amount."
+    businessInsuranceAmount: Float @rename(attribute: "business_insurance_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Vending income."
+    vendingIncome: Float @rename(attribute: "vending_income") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Commission amount."
+    commissionAmount: Float @rename(attribute: "commission_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Commission percent."
+    commissionPercent: Float @rename(attribute: "commission_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Manager first name."
+    managerFirstName: String @rename(attribute: "manager_first_name") @rules(apply: ["max:255"])
+
+    "Manager last name."
+    managerLastName: String @rename(attribute: "manager_last_name") @rules(apply: ["max:255"])
+
+    "Population."
+    population: Int
+
+    "Whether the uni is kronos."
+    isKronos: Boolean @rename(attribute: "is_kronos")
+
+    "Reg Tax."
+    regTax: ConnectRegTaxBelongsToGlAccount!
+
+    "Sysco."
+    sysco: String @rules(apply: ["max:255"])
+}
+
+input UpdateUnitInput @validator {
+    "Id."
+    id: ID! @eq
+
+    "Unique code."
+    code: String
+
+    "Name."
+    name: String @rules(apply: ["max:255"])
+
+    "Address."
+    address: String @rules(apply: ["max:255"])
+
+    "Zip."
+    zip: String @rules(apply: ["max:255"])
+
+    "Whether the unit is active."
+    isActive: Boolean @rename(attribute: "is_active")
+
+    "Whether the unit is vending."
+    isVending: Boolean @rename(attribute: "is_vending")
+
+    "Users."
+    users: CreateUserBelongsToMany
+
+    "Vendors."
+    vendors: CreateVendorBelongsToMany
+
+    "Gl accounts."
+    glAccounts: CreateGlAccountBelongsToMany
+
+    "Unit type."
+    unitType: ConnectBelongsToUnitType
+
+    "District."
+    district: ConnectBelongsToDistrict
+
+    "County."
+    county: ConnectBelongsToCounty
+
+    "City."
+    city: ConnectBelongsToCity
+
+    "Payroll password."
+    payrollPassword: String @rename(attribute: "payroll_password") @rules(apply: ["max:255"])
+
+    "Email account."
+    emailAccount: String @rename(attribute: "email_account") @rules(apply: ["max:255"])
+
+    "Management percent."
+    managementPercent: Float @rename(attribute: "management_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Management amount."
+    managementAmount: Float @rename(attribute: "management_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Management fee type."
+    managementFeeType: String @rename(attribute: "management_fee_type") @rules(apply: ["string", "exists:calculation_codes,code"])
+
+    "Administrative percent."
+    administrativePercent: Float @rename(attribute: "administrative_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Administrative amount."
+    administrativeAmount: Float @rename(attribute: "administrative_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Administrative fee type."
+    administrativeFeeType: String @rename(attribute: "administrative_fee_type") @rules(apply: ["string", "exists:calculation_codes,code"])
+
+    "Support percent."
+    supportPercent: Float @rename(attribute: "support_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Support amount."
+    supportAmount: Float @rename(attribute: "support_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Support fee type."
+    supportFeeType: String @rename(attribute: "support_fee_type") @rules(apply: ["string", "exists:calculation_codes,code"])
+
+    "Payroll tax percent."
+    payrollTaxPercent: Float @rename(attribute: "payroll_tax_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Benefits percent."
+    benefitsPercent: Float @rename(attribute: "benefits_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Benefits amount."
+    benefitsAmount: Float @rename(attribute: "benefits_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Vacation amount."
+    vacationAmount: Float @rename(attribute: "vacation_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Business unsurance amount."
+    businessInsuranceAmount: Float @rename(attribute: "business_insurance_amount")  @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Vending income."
+    vendingIncome: Float @rename(attribute: "vending_income") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Commission amount."
+    commissionAmount: Float @rename(attribute: "commission_amount") @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Commission percent."
+    commissionPercent: Float @rename(attribute: "commission_percent") @rules(apply: ["numeric", "between:0,100"])
+
+    "Manager first name."
+    managerFirstName: String @rename(attribute: "manager_first_name") @rules(apply: ["max:255"])
+
+    "Manager last name."
+    managerLastName: String @rename(attribute: "manager_last_name") @rules(apply: ["max:255"])
+
+    "Population."
+    population: Int
+
+    "Whether the uni is kronos."
+    isKronos: Boolean @rename(attribute: "is_kronos")
+
+    "Reg Tax."
+    regTax: ConnectRegTaxBelongsToGlAccount
+
+    "Sysco."
+    sysco: String @rules(apply: ["max:255"])
+}
+
+input ConnectBelongsToUnitType {
+    "Connect id."
+    connect: ID @rules(apply: ["exists:unit_types,id"])
+
+    "Disconnect."
+    disconnect: Boolean
+}
+
+input ConnectBelongsToDistrict {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:districts,id"])
+}
+
+input ConnectBelongsToCounty {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:counties,id"])
+}
+
+input ConnectBelongsToPeriod {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:periods,id"])
+}
+
+input ConnectBelongsToCity {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:cities,id"])
+}
+
+input ConnectRegTaxBelongsToGlAccount {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:gl_accounts,id"])
+}
+
+input CreateUserBelongsToMany @validator {
+    "Sync existing id's."
+    sync: [ID!]
+
+    "Sync existing id's without detaching."
+    syncWithoutDetaching: [ID!]
+
+    "Disconnect existing id's."
+    disconnect: [ID!]
+}
+
+input CreateVendorBelongsToMany {
+    "Sync existing id's."
+    sync: [ID!] @rules(apply: ["exists:vendors,id"])
+
+    "Sync existing id's without detaching."
+    syncWithoutDetaching: [ID!] @rules(apply: ["exists:vendors,id"])
+
+    "Disconnect existing id's."
+    disconnect: [ID!] @rules(apply: ["exists:vendors,id"])
+}
+
+input CreateGlAccountBelongsToMany {
+    "Sync existing id's."
+    sync: [ID!] @rules(apply: ["exists:gl_accounts,id"])
+
+    "Sync existing id's without detaching."
+    syncWithoutDetaching: [ID!] @rules(apply: ["exists:gl_accounts,id"])
+
+    "Disconnect existing id's."
+    disconnect: [ID!] @rules(apply: ["exists:gl_accounts,id"])
+}
+
+extend type Query {
+    "Find a single unit by an identifying attribute."
+    unit(
+        "Search by primary key."
+        id: ID! @eq
+    ): Unit
+        @find
+        @guard
+        @can(ability: "view", query: true)
+
+    "List multiple units."
+    units: [Unit!]!
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all of the units by pagination."
+    unitList(
+        code: String @where(operator: "like") @rules(apply: ["max:255"])
+    ): [Unit!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new unit."
+    createUnit(
+        "Unit input."
+        unitInput: CreateUnitInput! @spread
+    ): Unit
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing unit."
+    updateUnit(
+        "Unit input."
+        unitInput: UpdateUnitInput! @spread
+    ): Unit
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing unit."
+    deleteUnit(
+        "Id."
+        id: ID! @eq
+    ): Unit
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

@@ -1,0 +1,220 @@
+type CateringOrder {
+    "Unique primary key."
+    id: ID!
+
+    "Description."
+    description: String!
+
+    "The catering order items for the catering order."
+    items: [CateringOrderItem!]!
+
+    "The unit associated with catering order."
+    unit: Unit
+
+    "The period associated with register closeout."
+    period: Period
+
+    "The user associated with register closeout."
+    user: User
+
+    "Delivery date."
+    deliveryDate: DateTime! @rename(attribute: "delivery_date")
+
+    "Head count."
+    headCount: Int! @rename(attribute: "head_count")
+
+    "Phone number."
+    phoneNumber: String! @rename(attribute: "phone_number")
+
+    "Order by."
+    orderBy: String! @rename(attribute: "order_by")
+
+    "Order for."
+    orderFor: String! @rename(attribute: "order_for")
+
+    "Order date."
+    orderDate: Date! @rename(attribute: "order_date")
+
+    "Whether is taxable."
+    isTaxable: Boolean! @rename(attribute: "is_taxable")
+
+    "Tax."
+    tax: Float!
+
+    "Shipt to name."
+    shipToName: String! @rename(attribute: "ship_to_name")
+
+    "Ship to address."
+    shipToAddress: String! @rename(attribute: "ship_to_address")
+
+    "Bill to name."
+    billToName: String! @rename(attribute: "bill_to_name")
+
+    "Bill to address."
+    billToAddress: String! @rename(attribute: "bill_to_address")
+
+    "Whether is cash order."
+    isCashOrder: Boolean! @rename(attribute: "is_cash_order")
+
+    "Charge number."
+    chargeNumber: String! @rename(attribute: "charge_number")
+    
+    "Price"
+    price: Float!
+    
+    "When the catering order was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the catering order was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateCateringOrderInput {
+    "Description."
+    description: String! @rules(apply: ["required", "max:255"])
+
+    "Delivery date."
+    deliveryDate: DateTime! @rename(attribute: "delivery_date")
+
+    "Head count."
+    headCount: Int! @rename(attribute: "head_count")
+
+    "Phone number."
+    phoneNumber: String! @rename(attribute: "phone_number") @rules(apply: ["required", "max:255"])
+
+    "Order by."
+    orderBy: String! @rename(attribute: "order_by") @rules(apply: ["required", "max:255"])
+
+    "Order for."
+    orderFor: String! @rename(attribute: "order_for") @rules(apply: ["required", "max:255"])
+
+    "Order date."
+    orderDate: Date! @rename(attribute: "order_date")
+
+    "Whether is taxable."
+    isTaxable: Boolean! @rename(attribute: "is_taxable")
+
+    "Tax."
+    tax: Float! @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Items."
+    items: UpdateCateringItems
+
+    "Shipt to name."
+    shipToName: String! @rename(attribute: "ship_to_name") @rules(apply: ["required", "max:255"])
+
+    "Ship to address."
+    shipToAddress: String! @rename(attribute: "ship_to_address") @rules(apply: ["required", "max:255"])
+
+    "Bill to name."
+    billToName: String! @rename(attribute: "bill_to_name") @rules(apply: ["required", "max:255"])
+
+    "Bill to address."
+    billToAddress: String! @rename(attribute: "bill_to_address") @rules(apply: ["required", "max:255"])
+
+    "Whether is cash order."
+    isCashOrder: Boolean! @rename(attribute: "is_cash_order")
+
+    "Charge number."
+    chargeNumber: String! @rename(attribute: "charge_number") @rules(apply: ["required", "max:255"])
+}
+
+input UpdateCateringOrderInput {
+    "Id."
+    id: ID! @eq
+
+    "Description."
+    description: String @rules(apply: ["filled", "max:255"])
+
+    "Delivery date."
+    deliveryDate: DateTime @rename(attribute: "delivery_date")
+
+    "Head count."
+    headCount: Int @rename(attribute: "head_count")
+
+    "Phone number."
+    phoneNumber: String @rename(attribute: "phone_number") @rules(apply: ["filled", "max:255"])
+
+    "Order by."
+    orderBy: String @rename(attribute: "order_by") @rules(apply: ["filled", "max:255"])
+
+    "Order for."
+    orderFor: String @rename(attribute: "order_for") @rules(apply: ["filled", "max:255"])
+
+    "Order date."
+    orderDate: Date @rename(attribute: "order_date")
+
+    "Whether is taxable."
+    isTaxable: Boolean @rename(attribute: "is_taxable")
+
+    "Tax."
+    tax: Float @rules(apply: ["regex:/^\\d{1,6}(\\.\\d{1,2})?$/"])
+
+    "Items."
+    items: UpdateCateringItems
+
+    "Shipt to name."
+    shipToName: String @rename(attribute: "ship_to_name") @rules(apply: ["filled", "max:255"])
+
+    "Ship to address."
+    shipToAddress: String @rename(attribute: "ship_to_address") @rules(apply: ["filled", "max:255"])
+
+    "Bill to name."
+    billToName: String @rename(attribute: "bill_to_name") @rules(apply: ["filled", "max:255"])
+
+    "Bill to address."
+    billToAddress: String @rename(attribute: "bill_to_address") @rules(apply: ["filled", "max:255"])
+
+    "Whether is cash order."
+    isCashOrder: Boolean @rename(attribute: "is_cash_order")
+
+    "Charge number."
+    chargeNumber: String @rename(attribute: "charge_number") @rules(apply: ["filled", "max:255"])
+}
+
+input UpdateCateringItems {
+    create: [CreateCateringOrderItemInput!]
+    
+    update: [UpdateCateringOrderItemInput!]
+
+    delete: [ID!]
+}
+
+extend type Query {
+    "List multiple catering orders."
+    cateringOrders(
+        activePeriod: Boolean @scope
+    ): [CateringOrder!]! 
+        @all
+        @guard
+        @whereAuth(relation: "user")
+}
+
+extend type Mutation {
+    "Create a new catering order."
+    createCateringOrder(
+        "Catering order."
+        cateringOrderInput: CreateCateringOrderInput! @spread
+    ): CateringOrder
+        @guard
+        @can(ability: "create")
+        @inject(context: "user.id", name: "user_id")
+
+    "Update an existing catering order."
+    updateCateringOrder(
+        "Catering order."
+        cateringOrderInput: UpdateCateringOrderInput! @spread
+    ): CateringOrder
+        @guard
+        @inject(context: "user.id", name: "user_id")
+        @can(ability: "update", query: true, injectArgs: true)
+
+    "Delete an existing catering order."
+    deleteCateringOrder(
+        "Id."
+        id: ID! @eq
+    ): CateringOrder
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

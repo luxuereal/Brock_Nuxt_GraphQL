@@ -1,0 +1,105 @@
+type InventoryCategory {
+    "Unique primary key."
+    id: ID!
+
+    "Name."
+    name: String!
+
+    "Vending."
+    vending: String!
+
+    "Gl Account."
+    glAccount: GlAccount
+
+    "Inventory amount."
+    inventoryAmount: InventoryAmount @field(resolver: "App\\GraphQL\\Queries\\Fields\\InventoryAmount")
+
+    "When the inventory category was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the inventory category was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+type InventoryAmount {
+    "Current."
+    current: Float
+
+    "Previous."
+    previous: Float
+}
+
+input CreateInventoryCategoryInput {
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "Vending."
+    vending: String! @rules(apply: ["required", "max:255"])
+
+    "Gl Account."
+    glAccount: ConnectBelongsToGlAccount! @rules(apply: ["required"])
+}
+
+input UpdateInventoryCategoryInput {
+    "Unique primary key."
+    id: ID! @eq
+
+    "Name."
+    name: String @rules(apply: ["filled", "max:255"])
+
+    "Vending."
+    vending: String @rules(apply: ["filled", "max:255"])
+
+    "Gl Account."
+    glAccount: ConnectBelongsToGlAccount! @rules(apply: ["required"])
+}
+
+input ConnectBelongsToGlAccount {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:gl_accounts,id"])
+}
+
+extend type Query {
+    "List multiple inventory categories."
+    inventoryCategories(
+        vending: String @where(operator: "!=")
+    ): [InventoryCategory!]!
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all of the inventory categories by pagination."
+    inventoryCategoryList: [InventoryCategory!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new inventory category."
+    createInventoryCategory(
+        "Inventory category input."
+        inventoryCategoryInput: CreateInventoryCategoryInput! @spread
+    ): InventoryCategory
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing inventoryCategory."
+    updateInventoryCategory(
+        "Inventory category input."
+        inventoryCategoryInput: UpdateInventoryCategoryInput! @spread
+    ): InventoryCategory
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing inventory category."
+    deleteInventoryCategory(
+        "Id."
+        id: ID! @eq
+    ): InventoryCategory
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

@@ -1,0 +1,5 @@
+mutation CreateRegister($registerInput: CreateRegisterInput!) {
+  createRegister(registerInput: $registerInput) {
+    id
+  }
+}

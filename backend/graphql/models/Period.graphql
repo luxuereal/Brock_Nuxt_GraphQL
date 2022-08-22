@@ -1,0 +1,113 @@
+type Period {
+    "Unique primary key."
+    id: ID!
+
+    "Preiod end."
+    periodEnd: Date! @rename(attribute: "period_end")
+
+    "Year."
+    year: Int!
+
+    "Month."
+    month: Int!
+
+    "Week."
+    week: Int!
+
+    "Pivot."
+    pivot: PeriodUnitPivot
+
+    "When the period was created."
+    createdAt: DateTime @rename(attribute: "created_at")
+
+    "When the period was last updated."
+    updatedAt: DateTime @rename(attribute: "updated_at")
+}
+
+input CreatePeriodInput {
+    "Preiod end."
+    periodEnd: Date! @rename(attribute: "period_end") @rules(apply: ["required"])
+
+    "Year."
+    year: Int! @rules(apply: ["required", "integer"])
+
+    "Month."
+    month: Int! @rules(apply: ["required", "integer"])
+
+    "Week."
+    week: Int! @rules(apply: ["required", "integer"])
+}
+
+input UpdatePeriodInput {
+    "Id."
+    id: ID! @eq
+
+    "Preiod end."
+    periodEnd: Date! @rename(attribute: "period_end") @rules(apply: ["required"])
+
+    "Year."
+    year: Int! @rules(apply: ["required", "integer"])
+
+    "Month."
+    month: Int! @rules(apply: ["required", "integer"])
+
+    "Week."
+    week: Int! @rules(apply: ["required", "integer"])
+}
+
+type PeriodUnitPivot {
+    "Is closed."
+    isClosed: Boolean! @rename(attribute: "is_closed")
+}
+
+extend type Query {
+    periods(
+        hasUnits: Boolean @scope
+    ): [Period!]!
+        @all
+        @guard
+        @orderBy(column: "period_end", direction: DESC)
+        @can(ability: "viewAny")
+
+    PeriodsActive: [Period!]!
+        @guard
+        @can(ability: "viewAny")
+    
+    "Get all of the periods by pagination."
+    periodList(
+        hasUnits: Boolean @scope
+    ): [Period!]!
+        @paginate(defaultCount: 15)
+        @guard
+        @orderBy(column: "period_end", direction: DESC)
+        @can(ability: "viewAny")
+}
+
+extend type Mutation {
+    "Create a new period."
+    createPeriod(
+        "Period input."
+        periodInput: CreatePeriodInput! @spread
+    ): Period
+    @create
+    @guard
+    @can(ability: "create")
+
+    "Update an existing period."
+    updatePeriod(
+        "Period input."
+        periodInput: UpdatePeriodInput! @spread
+    ): Period
+    @update
+    @guard
+    @can(ability: "update", query: true)
+
+    "Delete an existing period."
+    deletePeriod(
+        "Id."
+        id: ID! @eq
+    ): Period
+    @delete
+    @guard
+    @can(ability: "delete", query: true)
+}

@@ -1,0 +1,116 @@
+type Purchase {
+    "Unique primary key."
+    id: ID!
+
+    "Number."
+    number: String!
+
+    "Date."
+    date: Date!
+
+    "Vendor."
+    vendor: Vendor
+
+    "Unit."
+    unit: Unit
+
+    "The period associated with register closeout."
+    period: Period
+
+    "The user associated with register closeout."
+    user: User
+
+    "Items."
+    items: [PurchaseCharge!]!
+
+    "When the purchase was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the purchase was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreatePurchaseInput {
+    "Number."
+    number: String! @rules(apply: ["required", "max:255"])
+
+    "Date."
+    date: Date!
+
+    "Vendor."
+    vendor: ConnectBelongsToVendor!
+
+    "Items."
+    items: UpdatePurchaseItems!
+}
+
+input UpdatePurchaseInput {
+    "Unique primary key."
+    id: ID! @eq
+
+    "Number."
+    number: String @rules(apply: ["filled", "max:255"])
+
+    "Date."
+    date: Date
+    
+    "Vendor."
+    vendor: ConnectBelongsToVendor
+
+    "Items."
+    items: UpdatePurchaseItems
+}
+
+input ConnectBelongsToVendor {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:vendors,id"])
+}
+
+input UpdatePurchaseItems {
+    create: [CreatePurchaseChargeInput!]
+
+    update: [UpdatePurchaseChargeInput!]
+
+    delete: [ID!]
+}
+
+extend type Query {
+    "List multiple purchases."
+    purchases(
+        activePeriod: Boolean @scope
+    ): [Purchase!]! 
+        @all
+        @guard
+        @whereAuth(relation: "user")
+}
+
+extend type Mutation {
+    "Create a new purchase."
+    createPurchase(
+        "Purchase input."
+        PurchaseInput: CreatePurchaseInput! @spread
+    ): Purchase
+        @create
+        @guard
+        @can(ability: "create")
+        @inject(context: "user.id", name: "user_id")
+
+    "Update an existing purchase."
+    updatePurchase(
+        "Purchase input."
+        PurchaseInput: UpdatePurchaseInput! @spread
+    ): Purchase 
+        @update
+        @guard
+        @can(ability: "update", query: true, injectArgs: true)
+        @inject(context: "user.id", name: "user_id")
+    
+    "Delete an existing purchase."
+    deletePurchase(
+        "Id."
+        id: ID! @eq
+    ): Purchase 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

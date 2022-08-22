@@ -1,0 +1,5 @@
+fragment RegisterCloseoutItemFragment on RegisterCloseoutItem {
+  id
+  glAccountId
+  amount
+}

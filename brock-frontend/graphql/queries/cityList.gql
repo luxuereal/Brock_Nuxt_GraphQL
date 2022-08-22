@@ -1,0 +1,25 @@
+#import '../fragments/city.gql'
+#import '../fragments/state.gql'
+
+query CityList($page: Int!) {
+  cityList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...CityFragment
+        state {
+        ...StateFragment
+        }
+    }
+  }
+}

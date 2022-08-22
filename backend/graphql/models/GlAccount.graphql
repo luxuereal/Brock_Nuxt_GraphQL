@@ -1,0 +1,96 @@
+type GlAccount {
+    "Unique primary key."
+    id: ID!
+
+    "Name."
+    name: String!
+
+    "The gl type code that owns the account."
+    glTypeCode: GlTypeCode
+
+    "The parent Gl ACcount."
+    parent: GlAccount
+
+    "The child Gl ACcount."
+    child: [GlAccount!]!
+
+    "The units that belongs to gl account."
+    units: [Unit!]!
+
+    "When the gl account code was created."
+    createdAt: DateTime! @rename(attribute: "created_at")
+
+    "When the gl account code was last updated."
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+}
+
+input CreateGlAccountInput {
+    "Name."
+    name: String! @rules(apply: ["required", "max:255"])
+
+    "Gl type code."
+    glTypeCode: ConnectBelongsToGlTypeCode!
+
+    "Parent Gl Account."
+    parent: ConnectBelongsToParentGlAccount
+}
+
+input UpdateGlAccountInput {
+    "Id."
+    id: ID! @eq
+
+    "Name."
+    name: String @rules(apply: ["filled", "max:255"])
+
+    "Gl type code."
+    glTypeCode: ConnectBelongsToGlTypeCode
+
+    "Parent Gl Account."
+    parent: ConnectBelongsToParentGlAccount
+}
+
+input ConnectBelongsToGlTypeCode {
+    "Connect id."
+    connect: ID! @rules(apply: ["required", "exists:gl_type_codes,id"])
+}
+
+input ConnectBelongsToParentGlAccount @validator {
+    "Connect id."
+    connect: ID!
+}
+
+extend type Query {
+    "List multiple gl accounts."
+    glAccounts: [GlAccount!]! 
+        @all
+        @guard
+}
+
+extend type Mutation {
+    "Create a new Gl Account."
+    createGlAccount(
+        "Gl Account."
+        GlAccountInput: CreateGlAccountInput! @spread
+    ): GlAccount 
+        @create
+        @guard
+        @can(ability: "create")
+
+    "Update an existing Gl Account."
+    updateGlAccount(
+        "Gl Account."
+        GlAccountInput: UpdateGlAccountInput! @spread
+    ): GlAccount 
+        @update
+        @guard
+        @can(ability: "update", query: true)
+
+    "Delete an existing Gl Account."
+    deleteGlAccount(
+        "Id."
+        id: ID! @eq
+    ): GlAccount 
+        @delete
+        @guard
+        @can(ability: "delete", query: true)
+}

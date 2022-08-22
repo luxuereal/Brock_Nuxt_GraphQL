@@ -1,0 +1,12 @@
+#import '../fragments/user.gql'
+#import '../fragments/unit.gql'
+
+query Users {
+  users {
+    ...UserFragment
+    units{
+      ...UnitFragment
+    }
+  }
+
+}

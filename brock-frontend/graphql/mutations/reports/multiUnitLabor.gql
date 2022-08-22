@@ -1,0 +1,3 @@
+mutation MultiUnitLabor($input: MultiUnitLaborInput!) {
+  multiUnitLabor(input: $input)
+}

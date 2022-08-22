@@ -1,0 +1,8 @@
+#import '../fragments/vendor.gql'
+#import '../fragments/term.gql'
+
+query Vendors($search: String) {
+  vendors(code: $search) {
+    ...VendorFragment
+  }
+}

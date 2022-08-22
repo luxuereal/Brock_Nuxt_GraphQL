@@ -1,0 +1,17 @@
+#import './glAccount.gql'
+#import './inventoryCategory.gql'
+
+fragment PurchaseChargeFragment on PurchaseCharge {
+  id
+  amount
+  glAccount {
+    ...GlAccountFragment
+  }
+  purchase {
+    id
+    number
+  }
+  inventoryCategory {
+    ...InventoryCategoryFragment
+  }
+}

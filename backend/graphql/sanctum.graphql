@@ -1,0 +1,97 @@
+"Logout status enum."
+enum LogoutStatus {
+    TOKEN_REVOKED
+}
+
+"The access token received by the user."
+type AccessToken {
+    "Access token."
+    token: String!
+}
+
+"Forgot password response."
+type ForgotPasswordResponse {
+    "Status."
+    status: PasswordStatus!
+
+    "Message."
+    message: String
+}
+
+"Reset password response."
+type ResetPasswordResponse {
+    "Status."
+    status: PasswordStatus!
+
+    "Message."
+    message: String
+}
+
+"Logout Response."
+type LogoutResponse {
+    "Status."
+    status: LogoutStatus!
+
+    "Message."
+    message: String!
+}
+
+"Credentials for authorization."
+input LoginCredentials {
+    "Email."
+    email: String! @rules(apply: ["required", "email"])
+
+    "Password."
+    password: String!
+}
+
+"Forgot password input."
+input ForgotPasswordInput {
+    "Email."
+    email: String! @rules(apply: ["required", "email"])
+    """
+    Url for the reset password process.
+    Use __EMAIL__ and __TOKEN__ placeholders in the url to set the reset password email and token.
+
+    http://example.com/reset-password?email=__EMAIL__&token=__TOKEN__
+    """
+    resetPasswordUrl: String! @rename(attribute: "reset_password_url") @rules(apply: ["required", "url"])
+}
+
+"Reset password input."
+input ResetPasswordInput {
+    "Email."
+    email: String! @rules(apply: ["required", "email"])
+
+    "Token."
+    token: String!
+
+    "Password."
+    password: String!
+
+    "Password confirmation."
+    passwordConfirmation: String! @rename(attribute: "password_confirmation") @rules(apply: ["same:password"])
+}
+
+extend type Mutation {
+    "Attempt to login the user using the provided credentials."
+    login(
+        "Login credentials."
+        credentials: LoginCredentials! @spread
+    ): AccessToken! @throttle(name: "auth")
+
+    "Attempt to sent the user password reset link."
+    forgotPassword(
+        "Forgot password Input."
+        forgotPasswordInput: ForgotPasswordInput! @spread
+    ): ForgotPasswordResponse!
+
+    "Reset provided by user password."
+    resetPassword(
+        "Reset password input."
+        resetPasswordInput: ResetPasswordInput! @spread
+    ): ResetPasswordResponse!
+
+    "Revoke the token provided by the user."
+    logout: LogoutResponse! @guard
+}

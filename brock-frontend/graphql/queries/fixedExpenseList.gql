@@ -1,0 +1,21 @@
+#import '../fragments/fixedExpense.gql'
+
+query FixedExpenseList($page: Int!) {
+  fixedExpenseList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+       ...FixedExpenseFragment
+    }
+  }
+}

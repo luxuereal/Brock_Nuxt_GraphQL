@@ -1,0 +1,25 @@
+#import '../fragments/county.gql'
+#import '../fragments/state.gql'
+
+query CountyList($page: Int!) {
+  countyList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...CountyFragment
+        state {
+        ...StateFragment
+        }
+    }
+  }
+}

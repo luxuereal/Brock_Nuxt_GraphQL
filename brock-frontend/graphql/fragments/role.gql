@@ -1,0 +1,9 @@
+#import './roleMenu.gql'
+
+fragment RoleFragment on Role {
+  id
+  name
+  roleMenus {
+    ...RoleMenuFragment
+  }
+}

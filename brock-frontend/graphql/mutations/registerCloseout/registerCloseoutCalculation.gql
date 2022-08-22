@@ -1,0 +1,30 @@
+mutation RegisterCloseoutCalculation(
+  $registerCloseoutCalculationInput: registerCloseoutCalculationInput!
+) {
+  registerCloseoutCalculation(
+    registerCloseoutCalculationInput: $registerCloseoutCalculationInput
+  ) {
+    fields {
+      netTotal
+      lastNonResettable
+      totalToDistribute
+      netCash
+      cashTax
+      calculatedCashDeposit
+      overShort
+      customerCountTotals
+      netSalesTotal
+    }
+    statistics {
+      totalDailyDeposit
+      totalNetSales
+      charge
+      cashTotal
+      cashTax
+      pettyCash
+      calcedDeposit
+      actualDeposit
+      overShort
+    }
+  }
+}

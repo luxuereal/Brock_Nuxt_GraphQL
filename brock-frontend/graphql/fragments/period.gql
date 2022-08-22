@@ -1,0 +1,10 @@
+fragment PeriodFragment on Period {
+  id
+  periodEnd
+  year
+  month
+  week
+  pivot {
+    isClosed
+  }
+}

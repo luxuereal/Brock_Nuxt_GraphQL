@@ -1,0 +1,21 @@
+#import '../fragments/calculationCode.gql'
+
+query CalculationCodeList($page: Int!) {
+  calculationCodeList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...CalculationCodeFragment
+    }
+  }
+}

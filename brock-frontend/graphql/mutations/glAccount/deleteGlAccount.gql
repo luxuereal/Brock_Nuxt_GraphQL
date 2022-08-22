@@ -1,0 +1,5 @@
+mutation deleteGlAccount($id: ID!) {
+  deleteGlAccount(id: $id) {
+    id
+  }
+}

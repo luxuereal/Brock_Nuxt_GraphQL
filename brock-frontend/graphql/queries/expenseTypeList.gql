@@ -1,0 +1,21 @@
+#import '../fragments/expenseType.gql'
+
+query ExpenseTypeList($page: Int!) {
+  expenseTypeList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...ExpenseTypeFragment
+    }
+  }
+}

@@ -1,0 +1,7 @@
+fragment CountyFragment on County {
+  id
+  name
+  tax
+  createdAt
+  updatedAt
+}

@@ -1,0 +1,5 @@
+mutation UpdateCounty($countyInput: UpdateCountyInput!) {
+  updateCounty(countyInput: $countyInput) {
+    id
+  }
+}

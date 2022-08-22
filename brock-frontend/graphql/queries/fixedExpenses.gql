@@ -1,0 +1,7 @@
+#import '../fragments/fixedExpense.gql'
+
+query FixedExpense {
+  fixedExpenses {
+    ...FixedExpenseFragment
+  }
+}

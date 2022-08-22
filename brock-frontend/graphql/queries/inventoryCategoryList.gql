@@ -1,0 +1,21 @@
+#import '../fragments/inventoryCategory.gql'
+
+query InventoryCategoryList($page: Int!) {
+  inventoryCategoryList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+        ...InventoryCategoryFragment
+    }
+  }
+}

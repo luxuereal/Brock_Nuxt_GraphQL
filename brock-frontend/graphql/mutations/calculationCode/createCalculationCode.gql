@@ -1,0 +1,5 @@
+mutation CreateCalculationCode($calculationCodeInput: CreateCalculationCodeInput!) {
+  createCalculationCode(calculationCodeInput: $calculationCodeInput) {
+    id
+  }
+}

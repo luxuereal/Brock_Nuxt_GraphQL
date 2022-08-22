@@ -1,0 +1,7 @@
+#import '../fragments/unit.gql'
+
+query Units {
+  units {
+    ...UnitFragment
+  }
+}

@@ -1,0 +1,72 @@
+* {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+input[symbol='$'] {
+  padding-left: 16px !important;
+  position: relative;
+}
+
+span[symbol='$'] {
+  position: relative;
+
+  &::after {
+    content: "$";
+    position: absolute;
+    width: 16px;
+    height: 20px;
+    text-align: center;
+    font-size: 14px;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    z-index: 0;
+  }
+}
+
+input[symbol="\%"] {
+  padding-right: 16px !important;
+  position: relative;
+  text-align: right;
+}
+
+span[symbol="\%"] {
+  position: relative;
+
+  &::after {
+    content: "%";
+    position: absolute;
+    width: 17px;
+    height: 22px;
+    font-size: 14px;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    z-index: 0;
+  }
+}
+
+.mx-input {
+  min-height: 42px !important;
+  width: 100%;
+  color: #000 !important;
+}

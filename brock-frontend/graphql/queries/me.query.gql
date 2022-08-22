@@ -1,0 +1,30 @@
+#import '../fragments/unit.gql'
+#import '../fragments/role.gql'
+
+query Me {
+  me {
+    id
+    avatar
+    firstName
+    lastName
+    selectedUnit {
+      ...UnitFragment
+      activePeriod {
+        id
+        periodEnd
+        year
+        month
+        week
+      }
+    }
+    email
+    units {
+      ...UnitFragment
+    }
+    role {
+      ...RoleFragment
+    }
+    isAdmin
+    isActive
+  }
+}

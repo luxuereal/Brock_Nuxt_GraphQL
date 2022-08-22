@@ -1,0 +1,5 @@
+mutation CreateCateringOrder($cateringOrderInput: CreateCateringOrderInput!) {
+  createCateringOrder(cateringOrderInput: $cateringOrderInput) {
+    id
+  }
+}

@@ -1,0 +1,29 @@
+#import '../fragments/cateringOrderItem.gql'
+#import '../fragments/period.gql'
+
+fragment CateringOrderFragment on CateringOrder {
+  id
+  description
+  items {
+    ...CateringOrderItemFragment
+  }
+  deliveryDate
+  headCount
+  phoneNumber
+  orderBy
+  orderFor
+  orderDate
+  isTaxable
+  tax
+  shipToName
+  shipToAddress
+  billToName
+  billToAddress
+  isCashOrder
+  chargeNumber
+  period {
+    ...PeriodFragment
+  }
+  createdAt
+  updatedAt
+}

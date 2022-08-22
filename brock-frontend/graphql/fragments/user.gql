@@ -1,0 +1,16 @@
+#import './role.gql'
+
+fragment UserFragment on User {
+  id
+  firstName
+  lastName
+  email
+  isAdmin
+  isActive
+  email_verified_at
+  role {
+    ...RoleFragment
+  }
+  created_at
+  updated_at
+}

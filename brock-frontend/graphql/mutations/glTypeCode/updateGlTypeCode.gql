@@ -1,0 +1,5 @@
+mutation UpdateGlTypeCode($GlTypeCodeInput: UpdateGlTypeCodeInput!) {
+  updateGlTypeCode(GlTypeCodeInput: $GlTypeCodeInput) {
+    id
+  }
+}

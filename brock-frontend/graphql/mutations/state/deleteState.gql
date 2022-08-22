@@ -1,0 +1,5 @@
+mutation deleteState($id: ID!) {
+  deleteState(id: $id) {
+    id
+  }
+}

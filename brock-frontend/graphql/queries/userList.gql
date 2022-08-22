@@ -1,0 +1,30 @@
+query UserList($page: Int!) {
+  userList(page: $page) {
+    paginatorInfo {
+      count
+      perPage
+      total
+      
+      firstItem
+      lastItem
+      
+      currentPage
+      lastPage
+      hasMorePages
+    }
+    data {
+      id
+      firstName
+      lastName
+      email
+      isAdmin
+      isActive
+      role {
+        name
+      }
+      units{
+        name
+      }
+    }
+  }
+}

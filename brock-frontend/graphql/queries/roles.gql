@@ -1,0 +1,7 @@
+#import '../fragments/role.gql'
+
+query Roles {
+  roles {
+    ...RoleFragment
+  }
+}
