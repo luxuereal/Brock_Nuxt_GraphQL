@@ -12,7 +12,7 @@
               v-model="unit"
               :options="units"
               :custom-label="nameWithId"
-              placeholder="Select one"
+              placeholder="-- Select --"
               track-by="name"
               :preselect-first="false"
               :show-labels="false"
@@ -40,7 +40,7 @@
               v-model="glAccount"
               :options="glAccounts"
               :custom-label="nameWithId"
-              placeholder="Select one"
+              placeholder="-- Select --"
               track-by="name"
               :preselect-first="false"
               :show-labels="false"
@@ -57,7 +57,7 @@
               v-model="glSubAccount"
               :options="glAccount.child"
               :custom-label="nameWithId"
-              placeholder="Select one"
+              placeholder="-- Select --"
               track-by="name"
               :preselect-first="false"
               :show-labels="false"
@@ -395,7 +395,10 @@ export default {
       this.isAttachGlAccounts = true
     },
     cancelAttach() {
-      this.isAttachGlAccounts = false 
+      this.isAttachGlAccounts = false
+      this.unit = ''
+      this.glAccount = ''
+      this.glSubAccount = ''
     },
     addGlTypeRow() {
       this.isAddGlTypeCode = true

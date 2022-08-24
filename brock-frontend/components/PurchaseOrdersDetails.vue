@@ -57,7 +57,7 @@
           <template #input>
             <CustomInput
               v-model.number="purchaseTotal"
-              type="number"
+              type="double"
               rules="required|currency"
               name="Purchase Total"
               placeholder="0.00"

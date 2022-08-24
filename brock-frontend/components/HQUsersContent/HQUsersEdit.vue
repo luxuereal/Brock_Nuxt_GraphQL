@@ -47,7 +47,6 @@
             <template #input>
               <CustomInput 
                 v-model="password"
-                rules="required"
                 name='"User Password"'
               />
             </template>
@@ -104,7 +103,7 @@
             :clear-on-select="false"
             :custom-label="nameWithId"
             :preserve-search="true"
-            placeholder="Pick some"
+            placeholder="-- Select --"
             label="name"
             track-by="name"
             :preselect-first="false"

@@ -44,10 +44,10 @@
 
             <CustomInput
               v-if="isEdit === item.id"
-              v-model="itemEdit.amount"
+              v-model.number="itemEdit.amount"
               rules="required|double|currency"
               do-not-show-error-message
-              type="number"
+              type="double"
               placeholder="0.00"
               symbol="$"
               name="fixedExpense-amount"
@@ -129,10 +129,10 @@
             />
 
             <CustomInput
-              v-model="newItem.amount"
+              v-model.number="newItem.amount"
               rules="required|double|currency"
               do-not-show-error-message
-              type="number"
+              type="double"
               placeholder="0.00"
               symbol="$"
               name="fixedExpense-amount"

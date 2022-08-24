@@ -1,11 +1,11 @@
-import Me from '../graphql/queries/me.query.gql'
+import Auth from '../graphql/queries/auth.gql'
 
 export default async function ({ app, redirect }) {
   const hasToken = !!app.$apolloHelpers.getToken()
 
   try {
     await app.apolloProvider.defaultClient.query({
-      query: Me,
+      query: Auth,
       fetchPolicy: 'no-cache',
     })
   } catch (error) {

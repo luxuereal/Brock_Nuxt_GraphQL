@@ -7,9 +7,9 @@
 
           <template #input>
             <CustomInput
-              v-model="totalPettyCash"
-              type="number"
-              rules="required|currency|max:255"
+              v-model.number="totalPettyCash"
+              type="double"
+              rules="required|currency"
               placeholder="0.00"
               name="Total Petty Cash"
               symbol="$"
@@ -57,9 +57,9 @@
               do-not-show-error-message
               placeholder="0.00"
               symbol="$"
-              rules="required|currency|max:255"
+              rules="required|currency"
               name="Petty Cash Amount"
-              type="number"
+              type="double"
               is-float="true"
               @input="(e) => updateItems(item, e, 'amount')"
             />
@@ -81,12 +81,12 @@
             />
 
             <CustomInput
-              v-model="newItem.amount"
+              v-model.number="newItem.amount"
               placeholder="0.00"
               symbol="$"
               do-not-show-error-message
-              type="number"
-              rules="required|currency|max:255"
+              type="double"
+              rules="required|currency"
               name="Petty Cash Amount"
               @change="onChangeFloatValue('amount', true)"
             />

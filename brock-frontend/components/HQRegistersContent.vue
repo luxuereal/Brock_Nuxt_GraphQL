@@ -11,7 +11,7 @@
               v-model="unit"
               :options="units"
               :custom-label="nameWithId"
-              placeholder="Select one"
+              placeholder="-- Select --"
               track-by="name"
               :preselect-first="false"
               :show-labels="false"
@@ -423,6 +423,8 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="scss">
 .input {
+  height: 40px;
+  
   &-row--offset {
     display: flex;
     margin: 0 -15px;
@@ -483,6 +485,16 @@ export default {
   background: url(assets/images/icons/chevron-down.svg);
   display: block;
   top: 0;
+}
+
+.multiselect__input, .multiselect__single {
+  padding: 0;
+  margin-top: 1px;
+  font-size: 14px;
+}
+
+.multiselect__placeholder {
+  color: black;
 }
 </style>
 <style lang="scss" scoped>

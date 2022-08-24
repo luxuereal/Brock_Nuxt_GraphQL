@@ -15,14 +15,10 @@ import { mapGetters } from 'vuex'
 import { HEADER_TABS, HQ_HEADER_TABS } from '../constants/constants'
 import HeaderTab from './HeaderTab.vue'
 import RolePrivileges from "~/graphql/queries/RolePrivileges.gql";
+
 export default {
   name: 'HeaderNavigation',
   components: { HeaderTab },
-  apollo: {
-    RolePrivileges: {
-      query: RolePrivileges,
-    },
-  },
   data() {
     return {
       mutableNav: {},
@@ -44,14 +40,21 @@ export default {
   },
   watch: {
     headerTabs() {
-      this.getRoleRivileges();
+      this.getMutableNav()
     },
   },
   mounted() {
-    this.getRoleRivileges();
+    this.getMutableNav()
   },
   methods: {
-    async getRoleRivileges() {
+    getMutableNav() {
+      if(this.role !== 'admin') {
+        this.getRolePrivileges()
+      } else {
+        this.mutableNav = this.headerTabs
+      }
+    },
+    async getRolePrivileges() {
       const roleResponse = await this.$apollo.query({
         query: RolePrivileges,
         fetchPolicy: 'network-only'

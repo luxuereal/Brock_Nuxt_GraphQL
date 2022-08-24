@@ -6,11 +6,11 @@
 
         <template #input>
           <CustomInput
-            v-model="nonResetable"
-            rules="currency|required|max:255"
+            v-model.number="nonResetable"
+            rules="currency|required"
             name="Non Resettable"
             placeholder="0.00"
-            type="number"
+            type="double"
             symbol="$"
             @change="onChangeFloatValue('nonResetable')"
           />
@@ -50,11 +50,11 @@
 
         <template #input>
           <CustomInput
-            v-model="taxFromTheTape"
-            rules="currency|required|max:255"
+            v-model.number="taxFromTheTape"
+            rules="currency|required"
             placeholder="0.00"
             name="Tax From The Tape"
-            type="number"
+            type="double"
             symbol="$"
             @change="onChangeFloatValue('taxFromTheTape')"
           />
@@ -68,11 +68,11 @@
 
         <template #input>
           <CustomInput
-            v-model="overringVoidTax"
-            rules="currency|required|max:255"
+            v-model.number="overringVoidTax"
+            rules="currency|required"
             placeholder="0.00"
             name="Overring/Void Tax"
-            type="number"
+            type="double"
             symbol="$"
             @change="onChangeFloatValue('overringVoidTax')"
           />
@@ -84,9 +84,9 @@
 
         <template #input>
           <CustomInput
-            v-model="netOV"
-            rules="currency|required|max:255"
-            type="number"
+            v-model.number="netOV"
+            rules="currency|required"
+            type="double"
             name="Net O/V"
             placeholder="0.00"
             symbol="$"
@@ -102,11 +102,11 @@
 
         <template #input>
           <CustomInput
-            v-model="chargeTax"
-            rules="currency|required|max:255"
+            v-model.number="chargeTax"
+            rules="currency|required"
             placeholder="0.00"
             name="Charge Tax"
-            type="number"
+            type="double"
             symbol="$"
             @change="onChangeFloatValue('chargeTax')"
           />
@@ -118,11 +118,11 @@
 
         <template #input>
           <CustomInput
-            v-model="netCharge"
-            rules="currency|required|max:255"
+            v-model.number="netCharge"
+            rules="currency|required"
             placeholder="0.00"
             name="Net Charge"
-            type="number"
+            type="double"
             symbol="$"
             @change="onChangeFloatValue('netCharge')"
           />
@@ -136,11 +136,11 @@
 
         <template #input>
           <CustomInput
-            v-model="voucherTax"
-            rules="currency|required|max:255"
+            v-model.number="voucherTax"
+            rules="currency|required"
             placeholder="0.00"
             name="Voucher Tax"
-            type="number"
+            type="double"
             symbol="$"
             @change="onChangeFloatValue('voucherTax')"
           />
@@ -152,11 +152,11 @@
 
         <template #input>
           <CustomInput
-            v-model="netVoucher"
-            rules="currency|required|max:255"
+            v-model.number="netVoucher"
+            rules="currency|required"
             placeholder="0.00"
             name="Net Voucher"
-            type="number"
+            type="double"
             symbol="$"
             @change="onChangeFloatValue('netVoucher')"
           />

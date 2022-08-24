@@ -7,11 +7,11 @@
 
           <template #input>
             <CustomInput
-              v-model="actualCashDeposit"
+              v-model.number="actualCashDeposit"
               placeholder="0.00"
-              rules="required|currency|max:255"
+              rules="required|currency"
               name="Actual Cash Deposit"
-              type="number"
+              type="double"
               symbol="$"
               @change="onChangeFloatValue('actualCashDeposit')"
             />
@@ -49,11 +49,11 @@
 
           <template #input>
             <CustomInput
-              v-model="customerCountBreakfast"
+              v-model.number="customerCountBreakfast"
               placeholder="0.00"
-              rules="required|currency|max:255"
+              rules="required|currency"
               name="Customer Count-Breakfast"
-              type="number"
+              type="double"
               symbol="$"
               @change="onChangeFloatValue('customerCountBreakfast')"
             />
@@ -65,11 +65,11 @@
 
           <template #input>
             <CustomInput
-              v-model="netSalesBreakfast"
+              v-model.number="netSalesBreakfast"
               placeholder="0.00"
-              rules="required|currency|max:255"
+              rules="required|currency"
               name="Net Sales-Breakfast"
-              type="number"
+              type="double"
               symbol="$"
               @change="onChangeFloatValue('netSalesBreakfast')"
             />
@@ -83,11 +83,11 @@
 
           <template #input>
             <CustomInput
-              v-model="customerCountLunch"
+              v-model.number="customerCountLunch"
               placeholder="0.00"
-              rules="required|currency|max:255"
+              rules="required|currency"
               name="Customer Count-Lunch"
-              type="number"
+              type="double"
               symbol="$"
               @change="onChangeFloatValue('customerCountLunch')"
             />
@@ -99,11 +99,11 @@
 
           <template #input>
             <CustomInput
-              v-model="netSalesLunch"
+              v-model.number="netSalesLunch"
               placeholder="0.00"
-              rules="required|currency|max:255"
+              rules="required|currency"
               name="Net Sales-Lunch"
-              type="number"
+              type="double"
               symbol="$"
               @change="onChangeFloatValue('netSalesLunch')"
             />
@@ -117,11 +117,11 @@
 
           <template #input>
             <CustomInput
-              v-model="customerCountDinner"
+              v-model.number="customerCountDinner"
               placeholder="0.00"
-              rules="required|currency|max:255"
+              rules="required|currency"
               name="Customer Count-Dinner"
-              type="number"
+              type="double"
               symbol="$"
               @change="onChangeFloatValue('customerCountDinner')"
             />
@@ -133,11 +133,11 @@
 
           <template #input>
             <CustomInput
-              v-model="netSalesDinner"
+              v-model.number="netSalesDinner"
               placeholder="0.00"
-              rules="required|currency|max:255"
+              rules="required|currency"
               name="Net Sales-Dinner"
-              type="number"
+              type="double"
               symbol="$"
               @change="onChangeFloatValue('netSalesDinner')"
             />
