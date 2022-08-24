@@ -6,7 +6,7 @@
 import Me from '~/graphql/queries/me.query.gql'
 export default {
   name: 'IndexPage',
-  async created() {
+  async mounted() {
     try {
       const {
         data: { me },

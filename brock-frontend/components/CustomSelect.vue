@@ -246,7 +246,7 @@ export default {
 
       const spaceAbove = this.$el.getBoundingClientRect().top
       const spaceBelow =
-        window.innerHeight - this.$el.getBoundingClientRect().bottom
+        document.documentElement.clientHeight - this.$el.getBoundingClientRect().bottom
       const hasEnoughSpaceBelow = spaceBelow > openOptionsHeight
 
       if (!hasEnoughSpaceBelow && spaceAbove) {
@@ -257,7 +257,8 @@ export default {
         
       const rect = this.$el.getBoundingClientRect()
       const scrollToTop = document.documentElement.scrollTop
-
+      const scrollToLeft = document.documentElement.scrollLeft
+      
       options.style.position = `absolute`
       if(this.isAbove) {
         options.style.top = `auto`
@@ -266,8 +267,7 @@ export default {
         options.style.top = `${spaceAbove + selectedOptionHeight + scrollToTop}px`
         options.style.bottom = `auto`
       }
-
-      options.style.left = `${rect.left}px`
+      options.style.left = `${rect.left + scrollToLeft}px`
       options.style.width = `${rect.width}px`
     },
     toggleSelect() {

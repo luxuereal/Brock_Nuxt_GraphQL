@@ -94,7 +94,7 @@ export default {
     }
   },
   mounted() {
-    if(!this.onlyLogo && this.role !== 'admin') {
+    if(!this.onlyLogo) {
       this.fetchData();
     }
   },
