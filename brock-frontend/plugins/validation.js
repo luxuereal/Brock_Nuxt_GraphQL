@@ -16,7 +16,7 @@ import {
 
 extend('currency', {
   validate: (value) => CURRENCY_VALIDATION_REGEX.test(value),
-  message: 'The {_field_} must have to be digit with two digits after dot',
+  message: 'The {_field_} can only hold two decimals',
 })
 
 extend('required', {
