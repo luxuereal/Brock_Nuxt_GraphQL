@@ -23,7 +23,7 @@
             name="Amount"
             placeholder="0.00"
             symbol="$"
-            type="number"
+            type="double"
             do-not-show-error-message
             @input="(e) => updateItems(item, Number(e), 'amount')"
             @change="onChangeFloatValue('amount', true, item)"
@@ -64,7 +64,7 @@
             name="Amount"
             placeholder="0.00"
             symbol="$"
-            type="number"
+            type="double"
             do-not-show-error-message
             @change="onChangeFloatValue('amount')"
           />

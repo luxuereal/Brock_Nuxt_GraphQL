@@ -44,12 +44,12 @@
           <CustomInput
             v-else
             :value="item.price"
-            rules="required|currency|max:255"
+            rules="required|currency"
             name="Unit Price"
             do-not-show-error-message
             placeholder="0.00"
             symbol="$"
-            type="number"
+            type="double"
             @input="(e) => updateItems(item, Number(e), 'price')"
           />
 
@@ -57,12 +57,12 @@
           <CustomInput
             v-else
             :value="item.ext"
-            rules="required|currency|max:255"
+            rules="required|currency"
             name="Ext"
             do-not-show-error-message
             placeholder="0.00"
             symbol="$"
-            type="number"
+            type="double"
             @input="(e) => updateItems(item, Number(e), 'ext')"
           />
 
@@ -91,7 +91,7 @@
 
           <CustomInput
             v-model.number="newItem.price"
-            type="number"
+            type="double"
             rules="required|currency"
             name="Unit Price"
             do-not-show-error-message
@@ -102,7 +102,7 @@
 
           <CustomInput
             v-model.number="newItem.ext"
-            type="number"
+            type="double"
             rules="required|currency"
             name="Ext"
             do-not-show-error-message

@@ -85,7 +85,7 @@
                 symbol="$"
                 rules="required|currency"
                 name="Amount"
-                type="number"
+                type="double"
                 :disabled="getIsEdit && expenseType.type === 'ReAccrual'"
                 @change="onChangeFloatValue"
               />

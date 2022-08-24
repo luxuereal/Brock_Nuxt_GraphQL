@@ -84,7 +84,8 @@ export default {
   },
   computed: {
     ...mapGetters ({
-      getUpdated: 'profile/getUpdated'
+      getUpdated: 'profile/getUpdated',
+      role: 'auth/getRole'
     })
   },
   watch: {
@@ -92,8 +93,8 @@ export default {
       this.fetchData()
     }
   },
-  beforeMount() {
-    if(!this.onlyLogo) {
+  mounted() {
+    if(!this.onlyLogo && this.role !== 'admin') {
       this.fetchData();
     }
   },

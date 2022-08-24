@@ -233,36 +233,40 @@ export default {
     },
     adjustPosition() {
       if(!(this.open && this.parentIsTable)) return
-      
+
+      const options = this.localTemp
+          ? document.getElementById('temp')
+          : document.getElementById(this.tempId)
+
+      const optionHeight = 37
+      const selectedOptionHeight = 40
+      const openOptionsCountLimit = 8
+      const openOptionsHeightLimit = 298
+      const openOptionsHeight = this.options.length > openOptionsCountLimit ? openOptionsHeightLimit : optionHeight * this.options.length
+
       const spaceAbove = this.$el.getBoundingClientRect().top
       const spaceBelow =
         window.innerHeight - this.$el.getBoundingClientRect().bottom
-      const hasEnoughSpaceBelow = spaceBelow > 300
+      const hasEnoughSpaceBelow = spaceBelow > openOptionsHeight
 
       if (!hasEnoughSpaceBelow && spaceAbove) {
         this.isAbove = true
       } else {
         this.isAbove = false
       }
-
-      const options = this.localTemp
-          ? document.getElementById('temp')
-          : document.getElementById(this.tempId)
         
       const rect = this.$el.getBoundingClientRect()
       const scrollToTop = document.documentElement.scrollTop
 
-      const optionsHeight = 300;
-      const optionHeight = 37;
-      const selectOptionHeight = 40;
-      const visibleOptionsLimit = 8;
-
       options.style.position = `absolute`
-      options.style.top = this.isAbove
-        ? this.options.length > visibleOptionsLimit
-        ? `${rect.top + scrollToTop - optionsHeight}px`
-        : `${rect.top + scrollToTop - optionHeight * this.options.length}px`
-        : `${rect.top + selectOptionHeight + scrollToTop}px`
+      if(this.isAbove) {
+        options.style.top = `auto`
+        options.style.bottom = `${spaceBelow + selectedOptionHeight - scrollToTop - 1}px`
+      } else {
+        options.style.top = `${spaceAbove + selectedOptionHeight + scrollToTop}px`
+        options.style.bottom = `auto`
+      }
+
       options.style.left = `${rect.left}px`
       options.style.width = `${rect.width}px`
     },

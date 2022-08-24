@@ -13,7 +13,7 @@
                 v-model="unit"
                 :options="units"
                 :custom-label="nameWithId"
-                placeholder="Select one"
+                placeholder="-- Select --"
                 track-by="name"
                 :preselect-first="false"
                 :show-labels="false"

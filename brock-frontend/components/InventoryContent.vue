@@ -44,7 +44,7 @@
                 v-else
                 v-model.number="item.inventoryAmount.current"
                 rules="currency"
-                type="number"
+                type="double"
                 placeholder="0.00"
                 do-not-show-error-message
                 symbol="$"

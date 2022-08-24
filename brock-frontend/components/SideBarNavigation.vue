@@ -19,11 +19,6 @@ export default {
   components: {
     SideBarTab
   },
-  apollo: {
-    RolePrivileges: {
-      query: RolePrivileges,
-    },
-  },
   props: {
     navTabs: {
       type: [Array, String],
@@ -38,13 +33,20 @@ export default {
   },
   watch: {
     navTabs() {
-      this.getRolePrivileges();
+      this.getMutableNav()
     },
   },
   mounted() {
-    this.getRolePrivileges();
+    this.getMutableNav()
   },
   methods: {
+    getMutableNav() {
+      if(this.role === 'admin') {
+        this.getRolePrivileges()
+      } else {
+        this.mutableNav = this.navTabs
+      }
+    },
     async getRolePrivileges() {
       const roleResponse = await this.$apollo.query({
         query: RolePrivileges,

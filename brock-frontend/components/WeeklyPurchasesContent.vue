@@ -33,11 +33,11 @@
             <span>{{ purchase.vendor.code }}</span>
 
             <span
-              >{{
+              >${{
                 purchase.items.reduce((prev, current) => {
                   return Number(prev) + Number(current.amount)
                 }, 0)
-              }}$</span
+              }}</span
             >
 
             <CustomTableIconsColumn

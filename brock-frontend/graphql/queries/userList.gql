@@ -20,9 +20,11 @@ query UserList($page: Int!) {
       isAdmin
       isActive
       role {
+        id
         name
       }
       units{
+        id
         name
       }
     }

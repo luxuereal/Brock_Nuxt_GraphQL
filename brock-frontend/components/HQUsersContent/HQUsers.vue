@@ -148,7 +148,7 @@ export default {
     }
   },
   beforeMount(){
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     ...mapActions({

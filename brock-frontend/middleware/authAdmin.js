@@ -1,4 +1,4 @@
-import Me from '../graphql/queries/me.query.gql'
+import Auth from '../graphql/queries/auth.gql'
 
 export default async function ({ app, redirect }) {
   const {
@@ -6,7 +6,7 @@ export default async function ({ app, redirect }) {
       me: { isAdmin },
     },
   } = await app.apolloProvider.defaultClient.query({
-    query: Me,
+    query: Auth,
   })
 
   if (!isAdmin) {
