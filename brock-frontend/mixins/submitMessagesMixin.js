@@ -12,6 +12,11 @@ export const submitMessagesMixin = {
       message: 'formSubmissionMessage/getMessage',
     }),
   },
+  data() {
+    return {
+      timeout: ''
+    }
+  },
   methods: {
     ...mapActions({
       setShowMessage: 'formSubmissionMessage/setShowMessage',
@@ -19,11 +24,13 @@ export const submitMessagesMixin = {
       setMessage: 'formSubmissionMessage/setMessage',
     }),
     hideMessage() {
-      setTimeout(() => {
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
         this.setShowMessage(false)
-      }, 6000)
+      }, 4000)
     },
     showSubmitMessage(message, type) {
+      this.setShowMessage(false)
       this.setShowMessage(true)
       this.setMessageType(type)
       this.setMessage(message)

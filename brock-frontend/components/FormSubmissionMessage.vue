@@ -1,6 +1,6 @@
 <template>
   <div
-    class="message"
+    class="message fade-in-out"
     :class="{
       'message--success': type === 'success',
       'message--error': type === 'error',
@@ -42,7 +42,6 @@ export default {
   right: 0;
   z-index: 100;
   padding: 10px 15px;
-  animation: message 0.5s ease-in-out;
 
   &--success {
     background: $eucalyptus;
@@ -61,13 +60,56 @@ export default {
   line-height: 20px;
 }
 
-@keyframes message {
-  0% {
-    right: -500px;
-  }
+.fade-in-out {
+  animation: fadeInOut ease-in-out 4.1s;
+  -webkit-animation: fadeInOut ease-in-out 4.1s;
+  -moz-animation: fadeInOut ease-in-out 4.1s;
+  -o-animation: fadeInOut ease-in-out 4.1s;
+  -ms-animation: fadeInOut ease-in-out 4.1s;
+}
 
-  100% {
-    right: 0;
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity:0;
+  }
+  20%, 80% {
+    opacity:1;
+  }
+}
+
+@-moz-keyframes fadeInOut {
+  0%, 100% {
+    opacity:0;
+  }
+  20%, 80% {
+    opacity:1;
+  }
+}
+
+@-webkit-keyframes fadeInOut {
+  0%, 100% {
+    opacity:0;
+  }
+  20%, 80% {
+    opacity:1;
+  }
+}
+
+@-o-keyframes fadeInOut {
+  0%, 100% {
+    opacity:0;
+  }
+  20%, 80% {
+    opacity:1;
+  }
+}
+
+@-ms-keyframes fadeInOut {
+  0%, 100% {
+    opacity:0;
+  }
+  20%, 80% {
+    opacity:1;
   }
 }
 </style>
