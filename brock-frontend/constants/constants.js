@@ -75,6 +75,16 @@ export const HOME_NAV_TABS = [
       'permissionType': 'VIEW'
     }
   },
+  {
+    id: 9,
+    caption: 'Payroll',
+    pageUrl: '/home/payroll',
+    iconSrc: require('assets/images/icons/home/payroll.svg'),
+    permission: {
+      'slugName': 'payroll',
+      'permissionType': 'VIEW'
+    }
+  },
 ]
 
 export const REVIEW_NAV_TABS = [
