@@ -36,12 +36,4 @@ class Term extends Model
     protected $casts = [
     
     ];
-
-    /**
-     * The vendors that belongs to the term.
-     */
-    public function vendors(): BelongsToMany
-    {
-        return $this->belongsToMany(Vendor::class);
-    }
 }

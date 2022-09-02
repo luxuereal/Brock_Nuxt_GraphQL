@@ -1,5 +1,3 @@
-#import '../fragments/unit.gql'
-
 query UnitList($page: Int!, $search: String) {
   unitList(page: $page, code: $search) {
     paginatorInfo {
@@ -15,7 +13,15 @@ query UnitList($page: Int!, $search: String) {
       hasMorePages
     }
     data {
-        ...UnitFragment
+      id
+      code
+      name
+      city {
+          name
+          state {
+              code
+          }
+      }
     }
   }
 }

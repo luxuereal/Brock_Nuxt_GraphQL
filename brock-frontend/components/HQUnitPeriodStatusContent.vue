@@ -7,8 +7,8 @@
 
           <template #input>
             <CustomSelect
-              v-if="units"
-              :options="units"
+              v-if="unitsByPeriod"
+              :options="unitsByPeriod"
               select-by="name"
               select-by-second="code"
               @input="selectUnit"
@@ -63,13 +63,13 @@
 </template>
 
 <script>
-import Units from '../graphql/queries/units.gql'
+import UnitsByPeriod from '../graphql/queries/unitsByPeriod.gql'
 import { formatDateFromAPI } from '~/helpers/helpers'
 export default {
   name: 'HQUnitPeriodStatusContent',
   apollo: {
-    units: {
-      query: Units,
+    unitsByPeriod: {
+      query: UnitsByPeriod,
       fetchPolicy: 'no-cache',
     },
   },

@@ -2,6 +2,11 @@
     <div class="my-container">
         <div class="content">
             <div class="page-content">
+                <div class="avatar-panel">
+                    <!-- Avatar -->
+                    <ProfileAvatar :avatar="profileInput.avatarResource" @changed="onAvatarChange">
+                    </ProfileAvatar>
+                </div>
                 <div class="form-content">
                     <div class="input-panel">
                         <ValidationObserver ref="form">
@@ -62,6 +67,7 @@
                                             <CustomInput
                                             v-model="profileInput.password"
                                             type="password"
+                                            name="confirmPassword"
                                             />
                                         </template>
                                         </InputWithTitle>
@@ -76,14 +82,12 @@
                                             <CustomInput
                                             v-model="profileInput.confirmPassword"
                                             type="password"
+                                            rules="password:@confirmPassword"
                                             />
                                         </template>
                                         </InputWithTitle>
                                     </div>
                                 </div>
-                            </div>
-                            <div v-if="profileInput.password != ''" :class="'password-match ' + (isPasswordConfirmed ? 'match' : 'notMatch')">
-                                {{ isPasswordConfirmed ? 'Match confirmed!' : 'Need to confirm with the same password.' }}
                             </div>
                         </ValidationObserver>
                     </div>
@@ -92,19 +96,7 @@
                         <DefaultButton button-color-gamma="white" padding="7px 12px" @event="reset"> Reset </DefaultButton>
                     </div>
                 </div>
-                <div class="avatar-panel">
-                    <!-- Avatar -->
-                    <ProfileAvatar :avatar="profileInput.avatarResource" @changed="onAvatarChange">
-                    </ProfileAvatar>
-                </div>
             </div>
-
-            <FormSubmissionMessage
-                v-if="showMessage"
-                :type="messageType"
-                :message="message"
-            />
-
         </div>
     </div>
 </template>
@@ -112,7 +104,6 @@
 <script>
 import { ValidationObserver } from 'vee-validate'
 import { mapActions } from 'vuex'
-import { submitMessagesMixin } from '~/mixins/submitMessagesMixin'
 import { errorHandlerMixin } from '~/mixins/errorHandlerMixin'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import UpdateProfile from '~/graphql/mutations/profile/updateProfile.mutation.gql'
@@ -131,9 +122,7 @@ export default {
         CustomInput,
         DefaultButton,
     },
-    mixins: [submitMessagesMixin, errorHandlerMixin, mutationMixin],
-    apollo: {
-    },
+    mixins: [errorHandlerMixin, mutationMixin],
     layout: 'profile',
     data() {
         return {
@@ -147,11 +136,6 @@ export default {
                 password: '',
                 confirmPassword: '',
             },
-        }
-    },
-    computed: {
-        isPasswordConfirmed() {
-            return this.profileInput.password === this.profileInput.confirmPassword
         }
     },
     beforeMount(){
@@ -188,25 +172,27 @@ export default {
             this.profileInput.avatarResource = avatarResource
         },
         async saveProfile() {
-            if ( this.isPasswordConfirmed ) {
-                await this.mutationAction(
-                    UpdateProfile,
-                    {
-                        profileInput: {
-                            avatar: this.profileInput.avatar,
-                            firstName: this.profileInput.firstName,
-                            lastName: this.profileInput.lastName,
-                            email: this.profileInput.email,
-                            password: this.profileInput.password,
-                        }
-                    },
-                    null,
-                    'Updated Successfully',
-                    'Error Occurred',
-                    null,
-                    true
-                )
-                this.setUpdated(this.profileInput.avatar);
+            if (this.profileInput.password && !this.profileInput.confirmPassword) return
+
+            const res = await this.mutationAction(
+                UpdateProfile,
+                {
+                    profileInput: {
+                        avatar: this.profileInput.avatar,
+                        firstName: this.profileInput.firstName,
+                        lastName: this.profileInput.lastName,
+                        email: this.profileInput.email,
+                        password: this.profileInput.password,
+                    }
+                },
+                null,
+                'Updated Successfully',
+                'Error Occurred',
+                null,
+                true
+            )
+            this.setUpdated(this.profileInput.avatar);
+            if(res) {
                 this.fetchData();
             }
         },
@@ -247,10 +233,10 @@ export default {
         }
 
         .form-content {
-            width: 30%;
+            width: auto;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-end;
 
             .input-panel {
 
@@ -258,7 +244,7 @@ export default {
                     display: flex;
 
                     .passwords {
-                        padding-left: 20px;
+                        padding-left: 2rem;
                     }
                 }
 
@@ -268,28 +254,53 @@ export default {
                         width: 240px;
                     }
                 }
-                .password-match {
-                    font-size: 12px;
-                    transform: translate(0px, -20px);
-                    &.match {
-                        color: green;
-                    }
-                    &.notMatch {
-                        color: $brown;
-                    }
-                }
             }
             .action-panel {
+                width: auto;
                 margin-top: 1rem;
-                margin-bottom: 1rem;
-                width: 100%;
-                padding-left: 40px;
+                padding-right: 40px;
             }
         }
         .avatar-panel {
-            width: 15%;
-            display: flex;
-            align-items: center;
+            width: auto;
+            margin-top: 1.5rem;
+            margin-right: 8rem;
+            display: flex;        
+        }
+
+        @media screen and (max-width: $lg) {
+            .form-content {
+                align-items: center;
+
+                .input-panel {
+                    .inputs-all {
+                        flex-direction: column;
+
+                        .passwords {
+                            padding-left: 0;
+                        }
+                    }
+                }
+                .action-panel {
+                    padding-right: 0px;
+                }
+            }
+            .avatar-panel {
+                align-items: center;
+                margin-top: 0px;
+                margin-right: 6rem;
+            }
+        }
+
+        @media screen and (max-width: $sm) {
+            .page-content {
+                flex-direction: column;
+            }
+            .avatar-panel {
+                flex-direction: column;
+                margin-top: 0px;
+                margin-right: 0px;
+            }
         }
     }
 }

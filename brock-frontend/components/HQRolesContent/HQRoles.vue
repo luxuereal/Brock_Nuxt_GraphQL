@@ -74,6 +74,7 @@
 import { ValidationObserver } from 'vee-validate'
 import { mapActions } from 'vuex'
 import PageContentWrapper from '../PageContentWrapper.vue'
+import Role from '../../graphql/queries/role.gql'
 import RoleList from '../../graphql/queries/roleList.gql'
 import CustomTableIconsColumn from '../CustomTableIconsColumn'
 
@@ -125,8 +126,13 @@ export default {
       setUpdateRole: 'roles/setUpdateRole',
       setShowAddRole: 'roles/setShowAddRole',
     }),
-    editUnit(role) {
-      this.setUpdateRole(role)
+    async editUnit(role) {
+      const res = await this.$apollo.query({
+          query: Role,
+          fetchPolicy: 'network-only',
+          variables: { id: role.id },
+      });
+      this.setUpdateRole(res.data.role)
       this.setShowAddRole('HQRolesEdit')
     },
     async confirmDelete(id) {

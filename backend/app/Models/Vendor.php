@@ -44,12 +44,4 @@ class Vendor extends Model
     {
         return $this->belongsToMany(Term::class);
     }
-
-    /**
-     * The units that belong to the vendor.
-     */
-    public function units(): BelongsToMany
-    {
-        return $this->belongsToMany(Unit::class);
-    }
 }

@@ -1,0 +1,12 @@
+#import '../fragments/unitType.gql'
+
+query UnitsByType {
+  unitsByType {
+    id
+    code
+    name
+    unitType {
+        ...UnitTypeFragment
+    }
+  }
+}

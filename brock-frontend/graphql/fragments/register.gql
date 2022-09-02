@@ -13,5 +13,6 @@ fragment RegisterFragment on Register {
   }
   unit {
     id
+    name
   }
 }

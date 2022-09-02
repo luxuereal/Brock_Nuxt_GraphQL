@@ -208,7 +208,7 @@ import InputRow from './InputRow.vue'
 import CustomInput from './CustomInput'
 import {closeRegisterMixin} from '~/mixins/closeRegisterMixin'
 import {tabsViewMixin} from '~/mixins/tabsViewMixin'
-import {meMixin} from '~/mixins/meMixin'
+import { meMixin } from '~/mixins/meMixin'
 
 export default {
   name: 'SalesInfo',
@@ -356,9 +356,25 @@ export default {
       },
     },
   },
+  watch: {
+    getIsCancel(value) {
+      if(!value) return
+
+      this.nonResetable = ''
+      this.netOV = ''
+      this.netCharge = ''
+      this.taxFromTheTape = ''
+      this.netVoucher = ''
+      this.overringVoidTax = ''
+      this.chargeTax = ''
+      this.voucherTax = ''
+    }
+  },
   methods: {
     onChangeFloatValue(stateProp) {
-      this[stateProp] = parseFloat(this[stateProp] !== '' ? this[stateProp] : 0).toFixed(2);
+      this.$store.commit('closeRegister/SET_IS_CANCEL', false)
+      this[stateProp] = parseFloat(typeof this[stateProp] !== 'string' ? this[stateProp] : 0).toFixed(2)
+
       if (stateProp === 'nonResetable') {
         this.$store.dispatch('closeRegister/setNonResetable', {
           ...this.calculationVariables,

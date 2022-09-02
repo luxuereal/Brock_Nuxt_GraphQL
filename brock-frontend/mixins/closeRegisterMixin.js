@@ -35,6 +35,7 @@ export const closeRegisterMixin = {
       getNetSalesTotals: 'closeRegister/getNetSalesTotals',
       getCloseDate: 'closeRegister/getCloseDate',
       getIsEdit: 'closeRegister/getIsEdit',
+      getIsCancel: 'closeRegister/getIsCancel',
       getDeleteItemIDs: 'closeRegister/getDeleteItemIDs',
       getItemsWithoutId: 'closeRegister/getItemsWithoutId',
       getTotalNetSale: 'closeRegister/getTotalNetSale',
@@ -55,6 +56,7 @@ export const closeRegisterMixin = {
       this.resetForm()
     },
     cancelCreate() {
+      this.$store.commit('closeRegister/SET_IS_CANCEL', true)
       this.$store.commit('closeRegister/SET_CLOSE_REGISTER', {
         ...CLOSE_REGISTER,
       })

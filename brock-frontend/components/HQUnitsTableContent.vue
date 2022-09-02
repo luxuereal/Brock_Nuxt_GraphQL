@@ -86,6 +86,7 @@
 
 <script>
 import UnitList from '../graphql/queries/unitList.gql'
+import Unit from '../graphql/queries/unit.gql'
 import DeleteUnit from '../graphql/mutations/unit/deleteUnit.gql'
 import PageContentWrapper from './PageContentWrapper.vue'
 import CustomTable from './CustomTable.vue'
@@ -145,14 +146,22 @@ export default {
       this.queryVariable.search = '%' + this.search + '%'
       this.goToPage(1)
     },
-    editUnit(unit) {
+    async editUnit(unit) {
+      const res = await this.$apollo.query({
+          query: Unit,
+          fetchPolicy: 'network-only',
+          variables: { id: unit.id },
+      });
+
+      const unitById = res.data.unit
+      
       const propertyList = ['administrativeAmount', 'administrativePercent', 'benefitsAmount', 'benefitsPercent', 'businessInsuranceAmount', 'commissionAmount', 'commissionPercent', 'managementAmount', 'managementPercent', 'payrollTaxPercent', 'supportAmount', 'supportPercent', 'vacationAmount', 'vendingIncome'];
       for ( const property of propertyList ) {
-        unit[property] = Number(unit[property]).toFixed(2);
+        unitById[property] = Number(unitById[property]).toFixed(2);
       }
 
-      this.setUnit(unit)
-      this.setUnitID(unit.id)
+      this.setUnit(unitById)
+      this.setUnitID(unitById.id)
       this.showAddUnit()
     },
     async confirmDelete(id) {

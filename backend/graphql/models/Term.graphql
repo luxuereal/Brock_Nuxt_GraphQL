@@ -11,9 +11,6 @@ type Term {
     "Disc days."
     discDays: Int! @rename(attribute: "disc_days")
 
-    "Vendors."
-    vendors: [Vendor!]!
-
     "Name."
     dueDays: String! @rename(attribute: "due_days")
 

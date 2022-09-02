@@ -7,9 +7,9 @@
 
         <template #input>
           <multiselect
-            v-if="units"
+            v-if="unitsByVendor"
             v-model="unit"
-            :options="units"
+            :options="unitsByVendor"
             :custom-label="nameWithId"
             placeholder="-- Select --"
             track-by="name"
@@ -28,8 +28,8 @@
       </InputWithTitle>
     </InputRow>
 
-    <LoadingBar v-if="$apollo.loading" />
-    <CustomTablesArea v-else>
+    <!-- <LoadingBar v-if="$apollo.loading" /> -->
+    <CustomTablesArea>
       <CustomTable v-if="vendors" class="table table--left" :w-table="580">
         <template #header>
           <div class="table-row">
@@ -120,7 +120,7 @@
 
 <script>
 import Vendors from '../graphql/queries/vendors.gql'
-import Units from '../graphql/queries/units.gql'
+import UnitsByVendor from '../graphql/queries/unitsByVendor.gql'
 import UpdateUnit from '../graphql/mutations/unit/updateUnit.gql'
 import PageContentWrapper from './PageContentWrapper.vue'
 import DefaultButton from './DefaultButton.vue'
@@ -132,8 +132,8 @@ export default {
   name: 'HQUnitVendorContent',
   components: { PageContentWrapper, DefaultButton, CustomTablesArea },
   apollo: {
-    units: {
-      query: Units,
+    unitsByVendor: {
+      query: UnitsByVendor,
     },
   },
   mixins: [mutationMixin, tableActionsMixin, multiselectMixin],
@@ -196,7 +196,7 @@ export default {
             },
           },
         },
-        Units,
+        UnitsByVendor,
         'Add vendor to unit success',
         'Add vendor to unit error'
       )
@@ -224,7 +224,7 @@ export default {
             },
           },
         },
-        Units,
+        UnitsByVendor,
         'Remove vendor from unit success',
         'Remove vendor from unit error'
       )

@@ -62,12 +62,4 @@ class GlAccount extends Model
     {
         return $this->belongsTo(GlTypeCode::class);
     }
-
-    /**
-     * The units that belong to the gl account.
-     */
-    public function units(): BelongsToMany
-    {
-        return $this->belongsToMany(Unit::class);
-    }
 }

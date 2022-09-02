@@ -1,0 +1,12 @@
+#import '../fragments/period.gql'
+
+query UnitsByPeriod {
+  unitsByPeriod {
+    id
+    code
+    name
+    periods {
+        ...PeriodFragment
+    }
+  }
+}

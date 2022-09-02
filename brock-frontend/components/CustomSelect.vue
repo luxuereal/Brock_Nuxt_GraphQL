@@ -6,6 +6,7 @@
         'selected--opened': open,
         'selected--error': error,
         'selected--above': isAbove,
+        'selected--input': inputSelect,
         disabled: disabled,
       }"
       @click="disabled ? null : toggleSelect()"
@@ -17,6 +18,13 @@
       <span v-else-if="multiSelect">
         {{ selectedOptions }}
       </span>
+      <input 
+        v-else-if="inputSelect"
+        v-model="searchValue"
+        class="input"
+        @keyup.enter="onNext()"
+        @input="onChangeInputValue($event.target.value)"
+      />
       <span v-else>
         {{
           selected && selectBySecond
@@ -48,15 +56,38 @@
         v-for="(option, i) of options"
         :key="i"
         class="option"
+        :class="{
+          'selectedOption': optionIndex === i
+        }"
         @click="selectOption(option)"
       >
-        {{
-          selectBySecond
-            ? selectByParent && option[selectByParent]
-            ? `${option[selectByParent][selectBySecond]}-${option[selectBySecond]} - ${option[selectBy]}`
-            : `${option[selectBySecond]} - ${option[selectBy]}`
-            : formatIfDate(option[selectBy])
-        }}
+        <div v-if="inputSelect">
+
+          {{ `${option[selectBy]}` }}
+          
+          <span v-if="selectBySecond" class="right">
+            {{
+              selectByParent && option[selectByParent]
+                ? `${option[selectByParent][selectBySecond]}-${option[selectBySecond]}`
+                : `${option[selectBySecond]}`
+            }}
+          </span>
+        </div>
+        <div v-else>
+          {{
+            selectBySecond
+              ? selectByParent && option[selectByParent]
+              ? `${option[selectByParent][selectBySecond]}-${option[selectBySecond]} - ${option[selectBy]}`
+              : `${option[selectBySecond]} - ${option[selectBy]}`
+              : formatIfDate(option[selectBy])
+          }}
+
+          <span v-if="showActivePeriodend" class="right">
+            {{
+              option.activePeriod ? `${option.activePeriod.periodEnd}` : ''
+            }}
+          </span>
+        </div>
       </div>
     </div>
 
@@ -108,7 +139,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    inputSelect: {
+      type: Boolean,
+      default: false,
+    },
     doNotPreselect: {
+      type: Boolean,
+      default: false,
+    },
+    showActivePeriodend: {
       type: Boolean,
       default: false,
     },
@@ -129,7 +168,10 @@ export default {
       selectedList: this.selectedItems ? [...this.selectedItems] : [],
       open: false,
       isAbove: false,
-      parentIsTable: false
+      parentIsTable: false,
+      optionIndex: 0,
+      searchValue: '',
+      isNext: false,
     }
   },
   computed: {
@@ -170,7 +212,7 @@ export default {
     if (!this.doNotPreselect) {
       this.$emit('input', this.selected)
     }
-
+    
     this.adjustOptions()
   },
   destroyed() {
@@ -204,6 +246,40 @@ export default {
       }
 
       return date.toISOString().startsWith(value);
+    },
+    onChangeInputValue(value) {
+      this.optionIndex = 0
+      this.onSearchOption(value)
+    },
+    onNext() {
+      this.optionIndex ++
+      this.onSearchOption(this.searchValue, 'isNext')
+    },
+    onSearchOption(value, isNext) {
+      if(value === '') return
+
+      const optionHeight = 37
+
+      for(; this.optionIndex < this.options.length; this.optionIndex ++) {
+
+        const option = this.options[this.optionIndex]
+        const code = this.selectBySecond
+          ? this.selectByParent && option[this.selectByParent]
+          ? `${option[this.selectByParent][this.selectBySecond]}-${option[this.selectBySecond]} - ${option[this.selectBy]}`
+          : `${option[this.selectBySecond]} - ${option[this.selectBy]}`
+          : `${option[this.selectBy]}`
+
+        if(code.includes(value)) {
+          const selector = this.$el.querySelector('.options')
+          if(selector) selector.scrollTop = optionHeight * this.optionIndex
+          this.$emit('input', option)
+          return
+        }
+
+        if((this.optionIndex + 1) === this.options.length && isNext) this.optionIndex = 0
+      }
+
+      this.open = true
     },
     adjustOptions() {
       if (typeof window === 'undefined') return
@@ -272,18 +348,32 @@ export default {
     },
     toggleSelect() {
       if (this.options.length) {
-        this.open = !this.open
+        this.open = this.inputSelect ? true : !this.open
       }
     },
     selectOption(option) {
       if (this.multiSelect) {
         if (this.selectedList.find((item) => item.id === option.id)) {
-          this.selectedList = this.selectedList.filter(
-            (item) => item.id !== option.id
-          )
+          this.selectedList = this.selectedList.filter((item) => item.id !== option.id)
         } else {
           this.selectedList.push(option)
         }
+      }
+
+      if(this.inputSelect) {
+        this.searchValue = this.selectBySecond
+          ? this.selectByParent && option[this.selectByParent]
+          ? `${option[this.selectByParent][this.selectBySecond]}-${option[this.selectBySecond]} - ${option[this.selectBy]}`
+          : `${option[this.selectBySecond]} - ${option[this.selectBy]}`
+          : `${option[this.selectBy]}`
+
+        this.options.forEach((item, key) => {
+          if(item[this.selectBySecond] === option[this.selectBySecond]) {
+            this.optionIndex = key
+          }
+        });
+        this.$emit('input', option)
+        return
       }
 
       if (
@@ -346,9 +436,18 @@ export default {
     border-radius: 0px 0px 3px 3px;
   }
 
+  &--input {
+    padding: 0px 36px 0px 0px;
+  }
+
   &:active {
     border-color: $firebrick;
   }
+}
+
+.selectedOption {
+  color: #fff !important;
+  background-color: $firebrick !important;
 }
 
 .icon {
@@ -404,6 +503,16 @@ export default {
   }
 }
 
+.input {
+  width: 100%;
+  height: 100%;
+  padding: 5px 10px 5px 8px;
+  
+  &:focus {
+    outline: none !important;
+  }
+}
+
 .error {
   font-size: 12px;
   color: $firebrick;
@@ -412,5 +521,13 @@ export default {
 .disabled {
   background: transparent;
   cursor: not-allowed;
+}
+
+.right {
+  float: right;
+  width: auto;
+  // min-width: 4.2rem;
+  margin-left: 2rem;
+  font-weight: bold;
 }
 </style>

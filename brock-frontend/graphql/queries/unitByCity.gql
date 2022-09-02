@@ -1,0 +1,13 @@
+query UnitsByCity {
+  unitsByCity {
+    id
+    code
+    name
+    city {
+        name
+        state {
+            code
+        }
+    }
+  }
+}

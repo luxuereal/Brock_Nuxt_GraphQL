@@ -36,12 +36,4 @@ class UnitType extends Model
     protected $casts = [
 
     ];
-
-    /**
-     * Get the units for the unit type.
-     */
-    public function units(): HasMany
-    {
-        return $this->hasMany(Unit::class);
-    }
 }

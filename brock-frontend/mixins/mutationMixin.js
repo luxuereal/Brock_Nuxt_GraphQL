@@ -43,7 +43,7 @@ export const mutationMixin = {
             return res
           } else {
             this.showSubmitMessage(res.data[mutationName].message || errorMessage || 'Not received Error message but has an error', 'error')
-            return res
+            return false
           }
         } catch (error) {
           const errorObj = error.graphQLErrors[0]

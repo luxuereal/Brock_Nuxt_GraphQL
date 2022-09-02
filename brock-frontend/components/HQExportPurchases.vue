@@ -46,7 +46,7 @@
           />
 
           <span>
-            {{ item.id }}
+            {{ item.code }}
           </span>
 
           <span>

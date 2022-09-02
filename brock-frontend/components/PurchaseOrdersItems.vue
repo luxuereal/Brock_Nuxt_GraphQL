@@ -146,8 +146,6 @@ import { purchaseOrderMixin } from '~/mixins/purchaseOrderMixin'
 import { tableActionsMixin } from '~/mixins/tableActionsMixin'
 import { formatDate } from '~/helpers/helpers'
 import GlAccounts from '~/graphql/queries/glAccounts.gql'
-import Me from '~/graphql/queries/me.query.gql'
-import { meMixin } from '~/mixins/meMixin'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import Purchases from '~/graphql/queries/purchases.gql'
 import InventoryCategories from '~/graphql/queries/inventoryCategories.gql'
@@ -167,14 +165,10 @@ export default {
     tableActionsMixin,
     mutationMixin,
     purchaseOrderMixin,
-    meMixin,
   ],
   apollo: {
     glAccounts: {
       query: GlAccounts,
-    },
-    me: {
-      query: Me,
     },
     inventoryCategories: {
       query: InventoryCategories,

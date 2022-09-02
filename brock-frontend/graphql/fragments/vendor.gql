@@ -4,9 +4,9 @@ fragment VendorFragment on Vendor {
   id
   code
   name
-  createdAt
-  updatedAt
   terms {
     ...TermFragment
   }
+  createdAt
+  updatedAt
 }

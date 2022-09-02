@@ -170,6 +170,7 @@ export default {
         }
       )
       if (res) {
+        this.$store.commit('tabsView/SET_ACTIVE_TAB', 0)
         this.$store.commit('cateringSales/SET_ID', res.data.createCateringOrder.id)
         // this.$store.commit('cateringSales/SET_CATERING_ORDER', CATERING_ORDER)
       }

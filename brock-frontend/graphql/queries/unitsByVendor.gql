@@ -1,0 +1,12 @@
+#import '../fragments/vendor.gql'
+
+query UnitsByVendor {
+  unitsByVendor {
+    id
+    code
+    name
+    vendors {
+        ...VendorFragment
+    }
+  }
+}

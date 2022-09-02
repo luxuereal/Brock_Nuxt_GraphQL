@@ -18,7 +18,7 @@ query CountyList($page: Int!) {
     data {
         ...CountyFragment
         state {
-        ...StateFragment
+            ...StateFragment
         }
     }
   }

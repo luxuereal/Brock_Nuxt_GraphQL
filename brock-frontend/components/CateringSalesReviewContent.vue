@@ -48,7 +48,6 @@ import { tableActionsMixin } from '~/mixins/tableActionsMixin'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import DeleteCateringOrder from '~/graphql/mutations/cateringOrder/deleteCateringOrder'
 import { formatDateFromAPI, formatDateAndTimeFromAPI } from '~/helpers/helpers'
-import { meMixin } from '~/mixins/meMixin'
 import RolePrivileges from "~/graphql/queries/RolePrivileges.gql";
 export default {
   name: 'CateringSalesReviewContent',
@@ -65,7 +64,7 @@ export default {
       query: RolePrivileges,
     },
   },
-  mixins: [tableActionsMixin, mutationMixin, meMixin],
+  mixins: [tableActionsMixin, mutationMixin],
   data () {
     return {
       canCreate: false,

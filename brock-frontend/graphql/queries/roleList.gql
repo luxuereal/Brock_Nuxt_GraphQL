@@ -1,5 +1,3 @@
-#import '../fragments/role.gql'
-
 query RoleList($page: Int!) {
   roleList(page: $page) {
     paginatorInfo {
@@ -15,7 +13,8 @@ query RoleList($page: Int!) {
       hasMorePages
     }
     data {
-        ...RoleFragment
+      id
+      name
     }
   }
 }

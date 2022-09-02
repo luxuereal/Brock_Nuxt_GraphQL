@@ -9,9 +9,9 @@
 
             <template #input>
               <multiselect
-                v-if="units"
+                v-if="unitsByType"
                 v-model="unit"
-                :options="units"
+                :options="unitsByType"
                 :custom-label="nameWithId"
                 placeholder="-- Select --"
                 track-by="name"
@@ -138,7 +138,7 @@
 <script>
 import {ValidationObserver} from 'vee-validate'
 import UnitTypes from '../graphql/queries/unitTypes.gql'
-import Units from '../graphql/queries/units.gql'
+import UnitsByType from '../graphql/queries/unitsByType.gql'
 import UpdateUnit from '../graphql/mutations/unit/updateUnit.gql'
 import CreateUnitType from '../graphql/mutations/unitType/createUnitType.gql'
 import DeleteUnitType from '../graphql/mutations/unitType/deleteUnitType.gql'
@@ -165,8 +165,8 @@ export default {
   },
   mixins: [mutationMixin, tableActionsMixin, multiselectMixin, submitMessagesMixin],
   apollo: {
-    units: {
-      query: Units,
+    unitsByType: {
+      query: UnitsByType,
     },
     unitTypes: {
       query: UnitTypes,
@@ -239,7 +239,7 @@ export default {
       if(!id) {
         this.showSubmitMessage('The "Unit ID" is required. Choose the Unit.', 'error')
         return
-      } 
+      }
       
       const {
         data: {updateUnit},
@@ -253,7 +253,7 @@ export default {
             },
           },
         },
-        Units,
+        UnitsByType,
         'Add Unit Type to unit success',
         'Add Unit Type to unit error',
         null,
@@ -279,7 +279,7 @@ export default {
             },
           },
         },
-        Units,
+        UnitsByType,
         'Remove Unit Type from unit success',
         'Remove Unit Type from unit error'
       )

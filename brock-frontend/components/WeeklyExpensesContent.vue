@@ -24,7 +24,7 @@
 
             <span> Expense Type </span>
 
-            <span> Gl Account </span>
+            <span> GL Account </span>
 
             <span> Amount </span>
 
