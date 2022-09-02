@@ -50,12 +50,10 @@
           <template #input>
             <CustomInput
               v-model.number="customerCountBreakfast"
-              placeholder="0.00"
-              rules="required|currency"
+              placeholder="0"
+              rules="required|numeric"
               name="Customer Count-Breakfast"
-              type="double"
-              symbol="$"
-              @change="onChangeFloatValue('customerCountBreakfast')"
+              type="number"
             />
           </template>
         </InputWithTitle>
@@ -84,12 +82,10 @@
           <template #input>
             <CustomInput
               v-model.number="customerCountLunch"
-              placeholder="0.00"
-              rules="required|currency"
+              placeholder="0"
+              rules="required|numeric"
               name="Customer Count-Lunch"
-              type="double"
-              symbol="$"
-              @change="onChangeFloatValue('customerCountLunch')"
+              type="number"
             />
           </template>
         </InputWithTitle>
@@ -118,12 +114,10 @@
           <template #input>
             <CustomInput
               v-model.number="customerCountDinner"
-              placeholder="0.00"
-              rules="required|currency"
+              placeholder="0"
+              rules="required|numeric"
               name="Customer Count-Dinner"
-              type="double"
-              symbol="$"
-              @change="onChangeFloatValue('customerCountDinner')"
+              type="number"
             />
           </template>
         </InputWithTitle>
@@ -152,10 +146,9 @@
           <template #input>
             <CustomInput
               v-model="customerCountTotals"
-              placeholder="0.00"
+              placeholder="0"
               disabled
-              symbol="$"
-              is-float="true"
+              is-float="false"
             />
           </template>
         </InputWithTitle>
@@ -209,25 +202,17 @@ import UpdateRegisterCloseout from '~/graphql/mutations/registerCloseout/updateR
 import RegisterCloseouts from '~/graphql/queries/registerCloseouts'
 import { formatDateForCloseRegisterAPI } from '~/helpers/helpers'
 import { CLOSE_REGISTER } from '~/constants/closeRegister'
-import Me from '~/graphql/queries/me.query.gql'
 import { meMixin } from '~/mixins/meMixin'
+
 export default {
   name: 'CloseRegisterFinishCloseout',
   components: { InputRow, InputWithTitle, CustomInput, ValidationObserver },
   mixins: [formMixin, closeRegisterMixin, mutationMixin, meMixin],
-  apollo: {
-    me: {
-      query: Me,
-    },
-  },
   data () {
     return {
       actualCashDeposit: '',
-      customerCountBreakfast: '',
-      customerCountLunch: '',
       netSalesBreakfast: '',
       netSalesLunch: '',
-      customerCountDinner: '',
       netSalesDinner: '',
     }
   },
@@ -259,7 +244,7 @@ export default {
         this.$store.commit('closeRegister/SET_OVER_SHORT', value)
       },
     },
-    /* customerCountBreakfast: {
+    customerCountBreakfast: {
       get() {
         return this.getCustomerCountBreakfast
       },
@@ -269,8 +254,8 @@ export default {
           value,
         })
       },
-    }, */
-    /* customerCountLunch: {
+    },
+    customerCountLunch: {
       get() {
         return this.getCustomerCountLunch
       },
@@ -280,7 +265,7 @@ export default {
           value,
         })
       },
-    }, */
+    },
     /* netSalesBreakfast: {
       get() {
         return this.getNetSalesBreakfast
@@ -303,7 +288,7 @@ export default {
         })
       },
     }, */
-    /* customerCountDinner: {
+    customerCountDinner: {
       get() {
         return this.getCustomerCountDinner
       },
@@ -313,7 +298,7 @@ export default {
           value,
         })
       },
-    }, */
+    },
     /* netSalesDinner: {
       get() {
         return this.getNetSalesDinner
@@ -342,21 +327,23 @@ export default {
       },
     },
   },
+  watch: {
+    getIsCancel(value) {
+      if(!value) return
+
+      this.actualCashDeposit = ''
+      this.netSalesBreakfast = ''
+      this.netSalesLunch = ''
+      this.netSalesDinner = ''
+    }
+  },
   methods: {
     onChangeFloatValue(stateProp) {
-      this[stateProp] = parseFloat(this[stateProp] !== '' ? this[stateProp] : 0).toFixed(2);
+      this.$store.commit('closeRegister/SET_IS_CANCEL', false)
+      this[stateProp] = parseFloat(typeof this[stateProp] !== 'string' ? this[stateProp] : 0).toFixed(2)
+
       if ( stateProp === 'actualCashDeposit' ) {
         this.$store.dispatch('closeRegister/setActualCashDeposit', {
-          ...this.calculationVariables,
-          value: this[stateProp],
-        })
-      } else if ( stateProp === 'customerCountBreakfast' ) {
-        this.$store.dispatch('closeRegister/setCustomerCountBreakfast', {
-          ...this.calculationVariables,
-          value: this[stateProp],
-        })
-      } else if ( stateProp === 'customerCountLunch' ) {
-        this.$store.dispatch('closeRegister/setCustomerCountLunch', {
           ...this.calculationVariables,
           value: this[stateProp],
         })
@@ -367,11 +354,6 @@ export default {
         })
       } else if ( stateProp === 'netSalesLunch' ) {
         this.$store.dispatch('closeRegister/setNetSalesLunch', {
-          ...this.calculationVariables,
-          value: this[stateProp],
-        })
-      } else if ( stateProp === 'customerCountDinner' ) {
-        this.$store.dispatch('closeRegister/setCustomerCountDinner', {
           ...this.calculationVariables,
           value: this[stateProp],
         })
@@ -437,6 +419,7 @@ export default {
       if (res) {
         this.$router.push('/home/close-register')
         this.$store.commit('closeRegister/SET_CLOSE_REGISTER', CLOSE_REGISTER)
+        this.$store.commit('closeRegister/SET_IS_CANCEL', true)
       }
     },
     async UpdateCloseRegister() {

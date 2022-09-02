@@ -271,7 +271,6 @@ return [
         'cateringOrderInput.phoneNumber' => '"Details / Phone Number"',
         'cateringOrderInput.orderBy' => '"Details / Order By"',
         'cateringOrderInput.orderFor' => '"Details / Order For"',
-        'cateringOrderInput.tax' => '"Items / Tax"',
         'cateringOrderInput.shipToName' => '"Ship To/Bill To / Ship To Name"',
         'cateringOrderInput.shipToAddress' => '"Ship To/Bill To / Ship To Address"',
         'cateringOrderInput.billToName' => '"Ship To/Bill To / Bill To Name"',

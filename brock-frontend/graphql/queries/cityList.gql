@@ -18,7 +18,7 @@ query CityList($page: Int!) {
     data {
         ...CityFragment
         state {
-        ...StateFragment
+            ...StateFragment
         }
     }
   }

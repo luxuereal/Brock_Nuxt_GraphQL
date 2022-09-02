@@ -1,21 +1,43 @@
 "Role Basic Data"
 type Role {
+    "Unique primary key."
     id: ID!
+
+    "Name."
     name: String!
+
+    "RoleMenus."
     roleMenus: [RoleMenu!]!
+    
+    "Users."
     users: [User!]!
+}
+
+type RoleInfo {
+    "Unique primary key."
+    id: ID!
+
+    "Name."
+    name: String!
 }
 
 extend type Query {
     "Get a single role by an ID"
     role (
         id: ID! @eq
-    ): Role @find @guard @can(ability: "view", query: true)
+    ): Role 
+        @find
+        @guard 
+        @can(ability: "view", query: true)
+    
     "All roles."
-    roles: [Role!]! @all @guard @can(ability: "viewAny")
+    roles: [Role!]! 
+        @all 
+        @guard 
+        @can(ability: "viewAny")
 
     "Get all of the roles by pagination."
-    roleList: [Role!]!
+    roleList: [RoleInfo!]!
         @paginate(defaultCount: 15)
         @guard
         @can(ability: "viewAny")

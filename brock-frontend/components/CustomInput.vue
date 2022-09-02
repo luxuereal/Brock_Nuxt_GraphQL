@@ -85,7 +85,14 @@ export default {
       this.$emit('input', inputValue)
     },
     displayCell(value) {
-      return (typeof value === 'string') ? value : (this.isFloat === "true" ? parseFloat(value !== '' ? value : 0).toFixed(2) : value)
+      return  this.name !== 'Phone Number'
+                ? (typeof value === 'string')
+                ? value : (this.isFloat === "true" ? parseFloat(value !== '' ? value : 0).toFixed(2) : value)
+                : this.acceptPhoneNumber(value)
+    },
+    acceptPhoneNumber(value) {
+      const x = value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+      return !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
     }
   },
 }

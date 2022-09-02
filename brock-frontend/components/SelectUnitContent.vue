@@ -14,6 +14,7 @@
               select-by-second="code"
               :selected-item="selectedUnit"
               :error="selectError"
+              show-active-periodend
               @input="selectUnit"
             />
 

@@ -4,6 +4,7 @@ import RegisterCloseoutCalculation
 
 export const state = () => ({
   isEdit: false,
+  isCancel: false,
   closeRegister: CLOSE_REGISTER,
   deleteItemIDs: [],
 })
@@ -14,6 +15,9 @@ export const mutations = {
   },
   SET_IS_EDIT(state, payload) {
     state.isEdit = payload
+  },
+  SET_IS_CANCEL(state, payload) {
+    state.isCancel = payload
   },
   SET_DELETE_ITEM_IDS(state, payload) {
     state.deleteItemIDs = [...state.deleteItemIDs, payload]
@@ -190,9 +194,9 @@ export const actions = {
         mutation: RegisterCloseoutCalculation,
         variables: {
           registerCloseoutCalculationInput: {
-            registerId: getters.getRegister.id,
-            unitId: data.unitId,
-            periodId: data.periodId,
+            registerId: Number(getters.getRegister.id),
+            unitId: Number(data.unitId),
+            periodId: Number(data.periodId),
             fields,
           },
         },
@@ -328,6 +332,7 @@ export const getters = {
   getNetSalesTotals: (state) => Number(state.closeRegister.netSalesTotals),
   getCloseDate: (state) => state.closeRegister.closeDate,
   getIsEdit: (state) => state.isEdit,
+  getIsCancel: (state) => state.isCancel,
   getDeleteItemIDs: (state) => state.deleteItemIDs,
   getItemsWithoutId: (state) =>
     state.closeRegister.items.filter((item) => !item.id),

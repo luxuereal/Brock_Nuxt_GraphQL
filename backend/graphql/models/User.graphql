@@ -39,8 +39,34 @@ type User {
     "When the account was last updated."
     updated_at: DateTime!
 
-    "role data"
+    "Role data"
     role: Role
+}
+
+type UserInfo {
+    "Unique primary key."
+    id: ID!
+
+    "Non-unique first name."
+    firstName: String! @rename(attribute: "first_name")
+
+    "Non-unique last name."
+    lastName: String! @rename(attribute: "last_name")
+
+    "Unique email address."
+    email: String!
+
+    "If user is admin role."
+    isAdmin: Boolean! @rename(attribute: "is_admin")
+
+    "If user is active"
+    isActive: Boolean! @rename(attribute: "is_active")
+
+    "Role data"
+    role: Role
+
+    "The units that belongs to user."
+    units: [Unit!]!
 }
 
 input UpdateProfileInput {
@@ -151,7 +177,10 @@ type UpdateProfileResponse {
 }
 
 type RolePrivileges {
+    "SlugName."
     slugName: String
+
+    "PermissionType."
     permissionType: PermissionType
 }
 
@@ -174,7 +203,7 @@ extend type Query {
     ): [User!]! @all @guard @can(ability: "viewAny")
 
     "Get all of the users by pagination."
-    userList: [User!]!
+    userList: [UserInfo!]!
         @paginate(defaultCount: 15)
         @guard
         @can(ability: "viewAny")

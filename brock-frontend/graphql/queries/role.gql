@@ -1,0 +1,7 @@
+#import '../fragments/role.gql'
+
+query Role($id: ID!) {
+  role(id: $id) {
+    ...RoleFragment
+  }
+}

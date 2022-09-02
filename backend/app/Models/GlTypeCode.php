@@ -36,12 +36,4 @@ class GlTypeCode extends Model
     protected $casts = [
 
     ];
-
-    /**
-     * Get the gl accounts for the gl type code.
-     */
-    public function glAccounts(): HasMany
-    {
-        return $this->hasMany(GlAccount::class);
-    }
 }

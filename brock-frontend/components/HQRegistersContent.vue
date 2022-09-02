@@ -7,9 +7,9 @@
 
           <template #input>
             <multiselect
-              v-if="units"
+              v-if="unitsByRegister"
               v-model="unit"
-              :options="units"
+              :options="unitsByRegister"
               :custom-label="nameWithId"
               placeholder="-- Select --"
               track-by="name"
@@ -240,7 +240,7 @@
 
 <script>
 import { ValidationObserver } from 'vee-validate'
-import Units from '../graphql/queries/units.gql'
+import UnitsByRegister from '../graphql/queries/unitsByRegister.gql'
 import Registers from '../graphql/queries/registers.gql'
 import RegisterTypes from '../graphql/queries/registersType.gql'
 import CreateRegister from '../graphql/mutations/register/createRegister.gql'
@@ -272,8 +272,8 @@ export default {
   },
   mixins: [mutationMixin, tableActionsMixin, multiselectMixin],
   apollo: {
-    units: {
-      query: Units,
+    unitsByRegister: {
+      query: UnitsByRegister,
       prefetch: true,
     },
     registers: {

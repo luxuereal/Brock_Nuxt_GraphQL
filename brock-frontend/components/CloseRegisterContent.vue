@@ -180,7 +180,6 @@ import {
 } from '~/helpers/helpers'
 import { CLOSE_REGISTER } from '~/constants/closeRegister'
 import Registers from '~/graphql/queries/registers.gql'
-import Me from '~/graphql/queries/me.query.gql'
 import { closeRegisterMixin } from '~/mixins/closeRegisterMixin'
 import { meMixin } from '~/mixins/meMixin'
 export default {
@@ -201,9 +200,6 @@ export default {
   apollo: {
     registers: {
       query: Registers,
-    },
-    me: {
-      query: Me,
     },
   },
   data() {

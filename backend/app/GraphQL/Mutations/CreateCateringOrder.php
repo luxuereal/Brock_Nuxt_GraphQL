@@ -18,7 +18,7 @@ class CreateCateringOrder
         $cateringOrderPrice = 0;
         if (!empty($cateringOrderItems)) {
             foreach ($cateringOrderItems as $cateringOrderItem) {
-                $cateringOrderPrice += ($cateringOrderItem['price'] + $cateringOrderItem['ext']) * $cateringOrderItem['quantity'];
+                $cateringOrderPrice += ($cateringOrderItem['price'] * $cateringOrderItem['quantity'] + $cateringOrderItem['ext']);
             }
         }
         

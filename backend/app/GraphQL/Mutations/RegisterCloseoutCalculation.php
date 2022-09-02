@@ -27,7 +27,7 @@ class RegisterCloseoutCalculation
 
         $fields = $args['fields'];
 
-        $lastNonResettable = $lastClosedRegister ? $lastClosedRegister->non_resetable : 0;
+        $lastNonResettable = $lastClosedRegister ? (double)$lastClosedRegister->non_resetable : 0;
         $totalToDistribute = $fields['non_resetable'];
         $netTotal = $totalToDistribute - $fields['tax_from_the_tape'];
         $netCash = $netTotal - $fields['net_o_v'] - $fields['net_charge'] - $fields['net_voucher'];

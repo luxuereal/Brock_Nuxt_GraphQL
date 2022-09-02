@@ -122,13 +122,13 @@
           <DefaultButton @event="cancelAdd"> Cancel </DefaultButton>
         </div>
 
-        <CustomTableRow class="table-footer table-row">
+        <CustomTableRow v-if="isTaxable" class="table-footer table-row">
           <span class="table-footer-caption">Price</span>
 
           <span class="table-footer-item">${{ totalPrice.toFixed(2) }}</span>
         </CustomTableRow>
 
-        <CustomTableRow class="table-footer table-row">
+        <CustomTableRow v-if="isTaxable" class="table-footer table-row">
           <span class="table-footer-caption">Tax</span>
 
           <!-- <CustomInput
@@ -141,15 +141,15 @@
             symbol="$"
             @change="onChangeFloatValue('tax')"
           /> -->
-          
-          <span class="table-footer-item">${{ Number(getTax).toFixed(2) }}</span>
+
+          <span class="table-footer-item">${{ totalTax.toFixed(2) }}</span>
 
         </CustomTableRow>
 
         <CustomTableRow class="table-footer table-row">
           <span class="table-footer-caption">Total</span>
 
-          <span class="table-footer-item">${{ totalPriceWithTax }}</span>
+          <span class="table-footer-item">${{ totalPriceWithTax.toFixed(2) }}</span>
         </CustomTableRow>
       </template>
     </CustomTable>
@@ -204,10 +204,14 @@ export default {
         price: '',
         ext: '',
       },
-      tax: '',
     }
   },
   computed: {
+    isTaxable: {
+      get() {
+        return this.getIsTaxable
+      },
+    },
     combinedItemsArray() {
       return [...this.getItems]
     },
@@ -216,32 +220,33 @@ export default {
         return (
           Number(prev) +
           Number(
-            Number(current.quantity) *
-              (Number(current.price) + Number(current.ext))
+            Number(current.quantity) * Number(current.price) + Number(current.ext)
           )
         )
       }, 0) +
           Number(
-            Number(this.newItem.quantity) *
-              (Number(this.newItem.price) + Number(this.newItem.ext))
+            Number(this.newItem.quantity) * Number(this.newItem.price) + Number(this.newItem.ext)
           )
     },
+    totalTax() {
+      if (!this.isTaxable)
+        return 0;
+
+      const salesTaxCafe = this.selectedUnit.city.state.salesTaxCafeteria
+      const countyTax = this.selectedUnit.county.tax
+      const cityTax = this.selectedUnit.city.tax
+
+      const cateringTax = Number(this.totalPrice) * (Number(salesTaxCafe) + Number(countyTax) + Number(cityTax))
+      return cateringTax
+    },
     totalPriceWithTax() {
-      return (Number(this.totalPrice) + Number(this.getTax)).toFixed(2)
+      return Number(this.totalPrice) + Number(this.getTax)
     }
-  },
-  beforeMount() {
-    const selectedUnit = this.selectedUnit
-    this.tax = Number(selectedUnit.city.tax) + Number(selectedUnit.county.tax)
-    this.onChangeFloatValue('tax')
   },
   methods: {
     onChangeFloatValue(stateProp) {
       if ( stateProp === 'price' || stateProp === 'ext' ) {
         this.newItem[stateProp] = parseFloat(Number(this.newItem[stateProp] !== '' ? this.newItem[stateProp] : 0).toFixed(2))
-      } else if ( stateProp === 'tax' ) {
-        this[stateProp] = parseFloat(Number(this[stateProp] !== '' ? this[stateProp] : 0).toFixed(2))
-        this.$store.commit('cateringSales/SET_TAX', this[stateProp])
       }
     },
     updateItems(item, event, itemProp) {
@@ -285,6 +290,7 @@ export default {
 
       if (formValidated) {
         if (this.newItem.quantity) {
+          this.$store.commit('cateringSales/SET_TAX', this.totalTax.toFixed(2))
           this.$store.commit('cateringSales/SET_ITEM', {
             ...this.newItem,
             tempId: new Date(),

@@ -1,0 +1,7 @@
+query AuthMe {
+  me {
+    id
+    avatar
+    isAdmin
+  }
+}

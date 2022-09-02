@@ -4,13 +4,13 @@
 
     <div class="nuxt-container">
       <Nuxt />
-    </div>
 
-    <FormSubmissionMessage
-      v-if="showMessage"
-      :type="messageType"
-      :message="message"
-    />
+      <FormSubmissionMessage
+        v-if="showMessage"
+        :type="messageType"
+        :message="message"
+      />
+    </div>
   </div>
 </template>
 
@@ -32,6 +32,7 @@ export default {
 }
 
 .nuxt-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;

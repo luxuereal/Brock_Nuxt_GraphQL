@@ -5,9 +5,6 @@ type UnitType {
     "Name."
     name: String!
 
-    "The units for the unit type."
-    units: [Unit!]!
-
     "When the unit type was created."
     createdAt: DateTime! @rename(attribute: "created_at")
 

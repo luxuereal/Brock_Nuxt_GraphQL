@@ -132,6 +132,84 @@ type Unit {
     updatedAt: DateTime! @rename(attribute: "updated_at")
 }
 
+type UnitByCity {
+    "Unique primary key."
+    id: ID!
+
+    "Unique code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "The city that own the unit."
+    city: City
+}
+
+type UnitByType {
+    "Unique primary key."
+    id: ID!
+
+    "Unique code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "The unit type that owns the unit."
+    unitType: UnitType
+}
+
+type UnitByRegister {
+    "Unique primary key."
+    id: ID!
+
+    "Name."
+    name: String!
+}
+
+type UnitByVendor {
+    "Unique primary key."
+    id: ID!
+
+    "Unique code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "The vendors that belongs to unit."
+    vendors: [Vendor!]!
+}
+
+type UnitByGLAccount {
+    "Unique primary key."
+    id: ID!
+
+    "Unique code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "The gl accounts that belongs to unit."
+    glAccounts: [GlAccount!]!
+}
+
+type UnitByPeriod {
+    "Unique primary key."
+    id: ID!
+
+    "Unique code."
+    code: String!
+
+    "Name."
+    name: String!
+
+    "The periods that belongs to unit."
+    periods: [Period!]!
+}
+
 input CreateUnitInput {
     "Unique code."
     code: String! @rules(apply: ["required", "unique:units,code", "max:255"])
@@ -452,11 +530,41 @@ extend type Query {
         @guard
         @can(ability: "viewAny")
 
-    "Get all of the units by pagination."
+    "Get all the units by pagination."
     unitList(
         code: String @where(operator: "like") @rules(apply: ["max:255"])
-    ): [Unit!]!
+    ): [UnitByCity!]!
         @paginate(defaultCount: 15)
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all the units with UnitType"
+    unitsByType: [UnitByType!]!
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all the units with Register"
+    unitsByRegister: [UnitByRegister!]!
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all the units with Vendor"
+    unitsByVendor: [UnitByVendor!]!
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all the units with GLAccount"
+    unitsByGLAccount: [UnitByGLAccount!]!
+        @all
+        @guard
+        @can(ability: "viewAny")
+
+    "Get all the units with Period"
+    unitsByPeriod: [UnitByPeriod!]!
+        @all
         @guard
         @can(ability: "viewAny")
 }

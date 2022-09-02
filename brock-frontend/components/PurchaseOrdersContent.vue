@@ -15,7 +15,6 @@ import PurchaseOrdersDetails from './PurchaseOrdersDetails.vue'
 import PurchaseOrdersItems from './PurchaseOrdersItems.vue'
 import PageSubHeaderContent from './PageSubHeaderContent.vue'
 import { mutationMixin } from '~/mixins/mutationMixin'
-import { meMixin } from '~/mixins/meMixin'
 import { PURCHASE_ORDER } from '~/constants/purchaseOrder'
 export default {
   name: 'PurchaseOrdersContent',
@@ -24,7 +23,7 @@ export default {
     PageContentWrapper,
     PageSubHeaderContent,
   },
-  mixins: [mutationMixin, meMixin],
+  mixins: [mutationMixin],
   data() {
     return {
       tabsHeaders: ['Details', 'Items'],

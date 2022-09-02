@@ -3,7 +3,7 @@ export const meMixin = {
   apollo: {
     me: {
       query: Me,
-      pollInterval: 700,
+      // pollInterval: 700,
     },
   },
   computed: {

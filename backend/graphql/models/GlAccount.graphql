@@ -14,9 +14,6 @@ type GlAccount {
     "The child Gl ACcount."
     child: [GlAccount!]!
 
-    "The units that belongs to gl account."
-    units: [Unit!]!
-
     "When the gl account code was created."
     createdAt: DateTime! @rename(attribute: "created_at")
 

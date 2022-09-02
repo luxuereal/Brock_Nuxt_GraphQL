@@ -58,7 +58,6 @@ import RegisterCloseouts from '~/graphql/queries/registerCloseouts'
 import { tableActionsMixin } from '~/mixins/tableActionsMixin'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import { formatDateFromAPI } from '~/helpers/helpers'
-import { meMixin } from '~/mixins/meMixin'
 import DeleteRegisterCloseout from '~/graphql/mutations/registerCloseout/deleteRegisterCloseout'
 import RolePrivileges from "~/graphql/queries/RolePrivileges.gql";
 export default {
@@ -80,7 +79,7 @@ export default {
       query: RolePrivileges,
     },
   },
-  mixins: [tableActionsMixin, mutationMixin, meMixin],
+  mixins: [tableActionsMixin, mutationMixin],
   data () {
     return {
       canCreate: false,

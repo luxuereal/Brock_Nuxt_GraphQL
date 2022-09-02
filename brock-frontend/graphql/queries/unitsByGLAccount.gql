@@ -1,0 +1,24 @@
+#import '../fragments/glAccount.gql'
+
+query UnitsByGLAccount {
+  unitsByGLAccount {
+    id
+    code
+    name
+    glAccounts {
+        ...GlAccountFragment
+        parent {
+            id
+            name
+            glTypeCode {
+                id
+                description
+            }
+        }
+        child {
+            id
+            name
+        }
+    }
+  }
+}

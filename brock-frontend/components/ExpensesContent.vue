@@ -43,9 +43,13 @@
             <template v-if="glAccounts" #input>
               <CustomSelect
                 :options="glAccounts"
+                select-by="name"
+                select-by-second="id"
+                select-by-parent="parent"
                 :error="selectError"
                 :selected-item="glAccount"
                 :disabled="getIsEdit && expenseType.type === 'ReAccrual'"
+                input-select
                 @input="selectGlAccount"
               />
             </template>
@@ -145,7 +149,6 @@ import DefaultButton from './DefaultButton.vue'
 import PageSubHeaderContent from './PageSubHeaderContent.vue'
 import { EXPENSE } from '~/constants/expense'
 import { mutationMixin } from '~/mixins/mutationMixin'
-import { meMixin } from '~/mixins/meMixin'
 import Expenses from '~/graphql/queries/expenses.gql'
 import ExpenseTypesFiltered from '~/graphql/queries/expenseTypesFiltered.gql'
 import Vendors from '~/graphql/queries/vendors.gql'
@@ -167,7 +170,7 @@ export default {
     ValidationObserver,
     PageSubHeaderContent,
   },
-  mixins: [formMixin, mutationMixin, meMixin],
+  mixins: [formMixin, mutationMixin],
   apollo: {
     ExpenseTypes: {
       query: ExpenseTypesFiltered,
