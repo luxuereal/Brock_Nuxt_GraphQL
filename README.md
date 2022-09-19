@@ -88,8 +88,6 @@ More information about the usage of this directory in [the documentation](https:
 
 </p> -->
 
-- [Installation](#installation)
-
 ## Installation
 
 #### 1. Pull project from git provider:
