@@ -5,10 +5,12 @@ query GlAccounts {
     ...GlAccountFragment
     parent {
       id
+      itemId
       name
     }
     child {
       id
+      itemId
       name
     }
   }

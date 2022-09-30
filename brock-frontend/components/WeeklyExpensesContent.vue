@@ -42,7 +42,7 @@
 
             <span> {{ expense.expenseType.description }} </span>
 
-            <span> {{ expense.glAccount.name }} </span>
+            <span> {{ getNameWithGLAccount(expense.glAccount) }} </span>
 
             <span> {{ Number(expense.amount).toFixed(2) }} </span>
 
@@ -75,6 +75,7 @@ import { tableActionsMixin } from '~/mixins/tableActionsMixin'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import { formatDateFromAPI } from '~/helpers/helpers'
 import DeleteExpense from '~/graphql/mutations/expense/deleteExpense.gql'
+import { glAccountMixin } from '~/mixins/glAccountMixin'
 import { meMixin } from '~/mixins/meMixin'
 import ExpenseTypes from '~/graphql/queries/expenseTypes.gql'
 import RolePrivileges from "~/graphql/queries/RolePrivileges.gql";
@@ -96,7 +97,7 @@ export default {
       query: RolePrivileges,
     },
   },
-  mixins: [tableActionsMixin, mutationMixin, meMixin],
+  mixins: [tableActionsMixin, mutationMixin, meMixin, glAccountMixin],
   data() {
     return {
       canCreate: false,

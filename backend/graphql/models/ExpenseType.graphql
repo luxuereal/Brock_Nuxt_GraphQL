@@ -8,6 +8,9 @@ type ExpenseType {
     "Description"
     description: String!
 
+    "Available on dropdown"
+    availableOnDropdown: Boolean! @rename(attribute: "available_on_dropdown")
+
     "Associated expenses"
     expenses: [Expense!]!
 
@@ -24,6 +27,9 @@ input CreateExpenseTypeInput {
 
     "Description"
     description: String! @rules(apply: ["required"])
+
+    "Available on dropdown"
+    availableOnDropdown: Boolean! @rename(attribute: "available_on_dropdown") @rules(apply: ["required"])
 }
 
 input UpdateExpenseTypeInput {
@@ -35,6 +41,9 @@ input UpdateExpenseTypeInput {
 
     "Description"
     description: String! @rules(apply: ["required"])
+
+    "Available on dropdown"
+    availableOnDropdown: Boolean! @rename(attribute: "available_on_dropdown") @rules(apply: ["required"])
 }
 
 extend type Query {

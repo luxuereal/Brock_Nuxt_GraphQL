@@ -37,10 +37,12 @@
               v-if="glAccounts && isEdit === item.id"
               :options="glAccounts"
               select-by="name"
+              select-by-second="itemId"
+              select-by-gl-account="glAccount"
               :selected-item="item.glAccount"
               @input="selectGlAccountEdit"
             />
-            <span v-else>{{ item.glAccount.name }}</span>
+            <span v-else>{{ getNameWithGLAccount(item.glAccount) }}</span>
 
             <CustomInput
               v-if="isEdit === item.id"
@@ -125,6 +127,9 @@
               v-if="glAccounts"
               :options="glAccounts"
               select-by="name"
+              select-by-second="itemId"
+              select-by-gl-account="glAccount"
+              input-select
               @input="selectGlAccount"
             />
 
@@ -184,6 +189,7 @@ import PaginationInput from './PaginationInput.vue'
 
 import GlAccounts from '~/graphql/queries/glAccounts.gql'
 import { tableActionsMixin } from '~/mixins/tableActionsMixin'
+import { glAccountMixin } from '~/mixins/glAccountMixin'
 import FixedExpensesFiltered from '~/graphql/queries/fixedExpensesFiltered.gql'
 import Me from '~/graphql/queries/me.query.gql'
 import { mutationMixin } from '~/mixins/mutationMixin'
@@ -213,7 +219,7 @@ export default {
     PaginationInput,
     // pagination
   },
-  mixins: [formMixin, tableActionsMixin, mutationMixin, paginatorMixin],
+  mixins: [formMixin, tableActionsMixin, mutationMixin, paginatorMixin, glAccountMixin],
   apollo: {
     glAccounts: {
       query: GlAccounts,

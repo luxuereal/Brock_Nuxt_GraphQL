@@ -25,6 +25,7 @@ class ExpenseTypes
                     ->orWhere('type', 'ReAccrual')
                     ->orWhere('type', 'Reversal');
             })
+            ->where('available_on_dropdown', true)
             ->get();
         return $expenseTypes;
     }

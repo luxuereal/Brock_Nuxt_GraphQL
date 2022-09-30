@@ -1,7 +1,6 @@
 import { PAYROLL } from '~/constants/payroll'
 
 export const state = () => ({
-  isEdit: false,
   payroll: PAYROLL,
 })
 
@@ -18,13 +17,9 @@ export const mutations = {
   SET_COMMENTS(state, payload) {
     state.payroll.comments = payload
   },
-  SET_IS_EDIT(state, payload) {
-    state.isEdit = payload
-  },
 }
 
 export const getters = {
-  getIsEdit: (state) => state.isEdit,
   getId: (state) => state.payroll.id,
   getAmount: (state) => state.payroll.amount,
   getComments: (state) => state.payroll.comments,

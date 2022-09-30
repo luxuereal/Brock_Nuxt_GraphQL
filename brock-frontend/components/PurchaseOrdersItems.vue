@@ -29,21 +29,23 @@
             @change="onChangeFloatValue('amount', true, item)"
           />
 
-          <span v-if="!getIsEdit">{{ item.inventoryCategory.id }} - {{ item.inventoryCategory.name }}</span>
+          <span v-if="!getIsEdit">{{ item.inventoryCategory.itemId }} - {{ item.inventoryCategory.name }}</span>
           <CustomSelect
             v-else-if="inventoryCategories"
             :options="inventoryCategories"
             select-by="name"
-            select-by-second="id"
+            select-by-second="itemId"
             :selected-item="item.inventoryCategory"
             @input="selectInventoryCategory(item, $event)"
           />
 
-          <span v-if="!getIsEdit">{{ item.glAccount.name }}</span>
+          <span v-if="!getIsEdit">{{ getNameWithGLAccount(item.glAccount) }}</span>
           <CustomSelect
             v-else-if="glAccounts"
             :options="glAccounts"
             select-by="name"
+            select-by-second="itemId"
+            select-by-gl-account="glAccount"
             :selected-item="item.glAccount"
             local-temp
             do-not-preselect
@@ -73,7 +75,7 @@
             v-if="inventoryCategories"
             :options="inventoryCategories"
             select-by="name"
-            select-by-second="id"
+            select-by-second="itemId"
             do-not-preselect
             @input="selectNewItemInventoryCategory"
           />
@@ -82,11 +84,14 @@
             v-if="glAccounts && !isSelectedGlAccount"
             :options="glAccounts"
             select-by="name"
+            select-by-second="itemId"
+            select-by-gl-account="glAccount"
+            input-select
             local-temp
             @input="selectNewItemGlAccount"
           />
 
-          <span v-if="isSelectedGlAccount">{{ selectedGlAccount.name }}</span>
+          <span v-if="isSelectedGlAccount">{{ getNameWithGLAccount(selectedGlAccount) }}</span>
         </CustomTableRow>
 
         <CustomTableRow v-if="leftToDistribute > 0" class="table-row add-row">
@@ -144,11 +149,13 @@ import CustomInput from './CustomInput.vue'
 import CustomTableAddIcon from './CustomTableAddIcon.vue'
 import { purchaseOrderMixin } from '~/mixins/purchaseOrderMixin'
 import { tableActionsMixin } from '~/mixins/tableActionsMixin'
+import { glAccountMixin } from '~/mixins/glAccountMixin'
 import { formatDate } from '~/helpers/helpers'
 import GlAccounts from '~/graphql/queries/glAccounts.gql'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import Purchases from '~/graphql/queries/purchases.gql'
 import InventoryCategories from '~/graphql/queries/inventoryCategories.gql'
+import Me from '~/graphql/queries/me.query.gql'
 import { PURCHASE_ORDER } from '~/constants/purchaseOrder'
 
 export default {
@@ -165,16 +172,11 @@ export default {
     tableActionsMixin,
     mutationMixin,
     purchaseOrderMixin,
+    glAccountMixin,
   ],
   apollo: {
     glAccounts: {
       query: GlAccounts,
-    },
-    inventoryCategories: {
-      query: InventoryCategories,
-      variables: {
-        vending: "Y"
-      }
     },
   },
   data() {
@@ -185,6 +187,7 @@ export default {
         glAccount: '',
       },
       isSelectedGlAccount: false,
+      inventoryCategories: '',
     }
   },
   computed: {
@@ -205,6 +208,9 @@ export default {
       return this.newItem.glAccount
     },
   },
+  beforeMount() {
+    this.fetchData()
+  },
   methods: {
     onChangeFloatValue(stateProp, isEdit = false, item = null) {
       if ( stateProp === 'amount' ) {
@@ -216,6 +222,25 @@ export default {
       }
     },
     formatDate,
+    async fetchData() {
+      const { 
+        data: { me }
+      } = await this.$apollo.query({
+        query: Me,
+        fetchPolicy: 'network-only'
+      });
+      
+      const { 
+        data: { inventoryCategories }
+      } = await this.$apollo.query({
+        query: InventoryCategories,
+        fetchPolicy: 'no-cache',
+        variables: {
+          vending: me.selectedUnit.isVending ? "N" : "Y" 
+        }
+      });
+      this.inventoryCategories = inventoryCategories
+    },
     updateItems(item, event, itemProp) {
       this.$store.commit(
         'purchaseOrders/SET_ITEMS',
@@ -430,7 +455,7 @@ export default {
 .table-row {
   display: grid;
   align-items: center;
-  grid-template-columns: 206px 345px 300px 50px;
+  grid-template-columns: 206px 345px 380px 50px;
   column-gap: 20px;
 }
 

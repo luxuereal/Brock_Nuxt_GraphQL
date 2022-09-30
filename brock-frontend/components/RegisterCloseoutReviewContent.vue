@@ -26,7 +26,7 @@
             <span>{{ formatDateFromAPI(registerCloseout.closeDate) }}</span>
 
             <span v-if="registerCloseout.unit">{{
-              registerCloseout.unit.id
+              registerCloseout.unit.code
             }}</span>
 
             <span v-if="registerCloseout.register">{{

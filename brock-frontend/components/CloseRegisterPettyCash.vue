@@ -35,23 +35,22 @@
             class="table-row"
           >
             <CustomSelect
-              v-if="me.selectedUnit.glAccounts && getIsEdit"
-              :options="me.selectedUnit.glAccounts"
+              v-if="selectedUnit.glAccounts && getIsEdit"
+              :options="selectedUnit.glAccounts"
               select-by="name"
-              select-by-second="id"
-              select-by-parent="parent"
+              select-by-second="itemId"
               :selected-item="
-                me.selectedUnit.glAccounts.find((glAccount) =>
+                selectedUnit.glAccounts.find((glAccount) =>
                   item.glAccountId
                     ? glAccount.id == item.glAccountId
                     : glAccount.id == item.glAccount.id
                 )
               "
+              select-by-gl-account="glAccount"
               input-select
               @input="selectGlAccount(item, $event)"
             />
-            <span v-else-if="!getIsEdit && item.glAccount.parent">{{ item.glAccount.parent.id }}-{{ item.glAccount.id }} - {{ item.glAccount.name }}</span>
-            <span v-else>{{ item.glAccount.id }} - {{ item.glAccount.name }}</span>
+            <span v-else-if="!getIsEdit">{{ getNameWithGLAccount(item.glAccount) }}</span>
 
             <CustomInput
               :value="item.amount"
@@ -73,11 +72,11 @@
 
           <CustomTableRow v-if="isAdd" class="table-row">
             <CustomSelect
-              v-if="me.selectedUnit.glAccounts"
-              :options="me.selectedUnit.glAccounts"
+              v-if="selectedUnit.glAccounts"
+              :options="selectedUnit.glAccounts"
               select-by="name"
-              select-by-second="id"
-              select-by-parent="parent"
+              select-by-second="itemId"
+              select-by-gl-account="glAccount"
               input-select
               @input="selectWewItemGlAccount"
             />
@@ -145,12 +144,13 @@ import CustomTableRow from './CustomTableRow.vue'
 import CustomSelect from './CustomSelect.vue'
 import CustomInput from './CustomInput.vue'
 import InputWithTitle from './InputWithTitle.vue'
-import Me from '~/graphql/queries/me.query.gql'
 import { tableActionsMixin } from '~/mixins/tableActionsMixin'
 import { closeRegisterMixin } from '~/mixins/closeRegisterMixin'
 import { tabsViewMixin } from '~/mixins/tabsViewMixin'
 import { submitMessagesMixin } from '~/mixins/submitMessagesMixin'
+import { glAccountMixin } from '~/mixins/glAccountMixin'
 import { meMixin } from '~/mixins/meMixin'
+
 export default {
   name: 'ClosRegisterPettyCash',
   components: {
@@ -167,13 +167,9 @@ export default {
     closeRegisterMixin,
     tabsViewMixin,
     submitMessagesMixin,
-    meMixin,
+    glAccountMixin,
+    meMixin,    
   ],
-  apollo: {
-    me: {
-      query: Me,
-    },
-  },
   data() {
     return {
       newItem: {
@@ -209,6 +205,9 @@ export default {
       if(!value) return
       this.totalPettyCash = ''
     }
+  },
+  mounted() {
+    console.log(this.selectedUnit.glAccounts)
   },
   methods: {
     onChangeFloatValue(stateProp, crud = false) {

@@ -27,7 +27,7 @@
             <template v-if="ExpenseTypes" #input>
               <CustomSelect
                 :options="ExpenseTypes"
-                select-by="type"
+                select-by="description"
                 :selected-item="expenseType"
                 :disabled="getIsEdit && expenseType.type === 'ReAccrual'"
                 @input="setExpensesType"
@@ -45,7 +45,7 @@
                 :options="glAccounts"
                 select-by="name"
                 select-by-second="id"
-                select-by-parent="parent"
+                select-by-gl-account="glAccount"
                 :error="selectError"
                 :selected-item="glAccount"
                 :disabled="getIsEdit && expenseType.type === 'ReAccrual'"
@@ -71,6 +71,8 @@
               <CustomSelect
                 :options="vendors"
                 :selected-item="vendor"
+                select-by="name"
+                select-by-second="code"
                 :disabled="getIsEdit && expenseType.type === 'ReAccrual'"
                 @input="setVendor"
               />

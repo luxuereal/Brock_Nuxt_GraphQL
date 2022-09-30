@@ -28,10 +28,15 @@
       <span v-else>
         {{
           selected && selectBySecond
-            ? selectByParent && selected[selectByParent]
-            ? `${selected[selectByParent][selectBySecond]}-${selected[selectBySecond]} - ${selected[selectBy]}`
-            : `${selected[selectBySecond]} - ${selected[selectBy]}`
+            ? selectByGlAccount
+            ? `${getNameWithGLAccount(selected)}`
+            : `${selected[selectBySecond]} — ${selected[selectBy]}`
             : selected && formatIfDate(selected[selectBy])
+        }}
+      </span>
+      <span v-if="showActivePeriodend" class="right">
+        {{
+          selected.activePeriod ? `${selected.activePeriod.periodEnd}` : ''
         }}
       </span>
 
@@ -59,29 +64,25 @@
         :class="{
           'selectedOption': optionIndex === i
         }"
+        @dblclick="selectOption(option,'dbl')"
         @click="selectOption(option)"
       >
         <div v-if="inputSelect">
-
           {{ `${option[selectBy]}` }}
-          
           <span v-if="selectBySecond" class="right">
             {{
-              selectByParent && option[selectByParent]
-                ? `${option[selectByParent][selectBySecond]}-${option[selectBySecond]}`
-                : `${option[selectBySecond]}`
+              selectByGlAccount && `${getItemIdWithGLAccount(option)}`
             }}
           </span>
         </div>
         <div v-else>
           {{
             selectBySecond
-              ? selectByParent && option[selectByParent]
-              ? `${option[selectByParent][selectBySecond]}-${option[selectBySecond]} - ${option[selectBy]}`
-              : `${option[selectBySecond]} - ${option[selectBy]}`
+              ? selectByGlAccount
+              ? `${getNameWithGLAccount(option)}`
+              : `${option[selectBySecond]} — ${option[selectBy]}`
               : formatIfDate(option[selectBy])
           }}
-
           <span v-if="showActivePeriodend" class="right">
             {{
               option.activePeriod ? `${option.activePeriod.periodEnd}` : ''
@@ -96,8 +97,10 @@
 </template>
 
 <script>
+import { glAccountMixin } from '~/mixins/glAccountMixin'
 export default {
   name: 'CustomSelect',
+  mixins: [ glAccountMixin ],
   props: {
     options: {
       type: Array,
@@ -119,7 +122,7 @@ export default {
       type: String,
       default: null,
     },
-    selectByParent: {
+    selectByGlAccount: {
       type: String,
       default: null,
     },
@@ -171,7 +174,7 @@ export default {
       parentIsTable: false,
       optionIndex: 0,
       searchValue: '',
-      isNext: false,
+      isNonSearchResult: true,
     }
   },
   computed: {
@@ -189,7 +192,15 @@ export default {
   },
   watch: {
     open() {
-      this.adjustPosition()    
+      this.adjustPosition()
+      if(this.open && this.selected && !this.inputSelect) {
+        this.options.forEach((item, index) => {
+          if(item.id === this.selected.id) {
+            this.optionIndex = index
+            this.scrollToPosition(index)
+          }
+        });
+      }
     },
     options() {
       this.selected = this.options[0]
@@ -248,38 +259,36 @@ export default {
       return date.toISOString().startsWith(value);
     },
     onChangeInputValue(value) {
+      this.open = true
       this.optionIndex = 0
+      this.isNonSearchResult = true
       this.onSearchOption(value)
     },
     onNext() {
       this.optionIndex ++
-      this.onSearchOption(this.searchValue, 'isNext')
+      this.onSearchOption(this.searchValue)
     },
-    onSearchOption(value, isNext) {
+    onSearchOption(value) {
       if(value === '') return
+      if(this.optionIndex >= this.options.length) this.optionIndex = 0
 
-      const optionHeight = 37
-
-      for(; this.optionIndex < this.options.length; this.optionIndex ++) {
-
+      for(; this.optionIndex < this.options.length; this.optionIndex ++) {  
         const option = this.options[this.optionIndex]
-        const code = this.selectBySecond
-          ? this.selectByParent && option[this.selectByParent]
-          ? `${option[this.selectByParent][this.selectBySecond]}-${option[this.selectBySecond]} - ${option[this.selectBy]}`
-          : `${option[this.selectBySecond]} - ${option[this.selectBy]}`
-          : `${option[this.selectBy]}`
-
+        const code = this.selectByGlAccount && `${this.getItemIdWithGLAccount(option)}`
         if(code.includes(value)) {
-          const selector = this.$el.querySelector('.options')
-          if(selector) selector.scrollTop = optionHeight * this.optionIndex
+          this.isNonSearchResult = false
+          this.scrollToPosition(this.optionIndex)
           this.$emit('input', option)
           return
         }
-
-        if((this.optionIndex + 1) === this.options.length && isNext) this.optionIndex = 0
+        if((this.optionIndex + 1) === this.options.length && !this.isNonSearchResult) this.optionIndex = 0
       }
-
-      this.open = true
+    },
+    scrollToPosition(itemCount) {
+      const optionHeight = 37
+      let selector = this.$el.querySelector('.options')
+      if(!selector) selector = document.querySelector('.options')
+      selector.scrollTop = optionHeight * itemCount
     },
     adjustOptions() {
       if (typeof window === 'undefined') return
@@ -351,7 +360,7 @@ export default {
         this.open = this.inputSelect ? true : !this.open
       }
     },
-    selectOption(option) {
+    selectOption(option, isDbClick) {
       if (this.multiSelect) {
         if (this.selectedList.find((item) => item.id === option.id)) {
           this.selectedList = this.selectedList.filter((item) => item.id !== option.id)
@@ -362,11 +371,14 @@ export default {
 
       if(this.inputSelect) {
         this.searchValue = this.selectBySecond
-          ? this.selectByParent && option[this.selectByParent]
-          ? `${option[this.selectByParent][this.selectBySecond]}-${option[this.selectBySecond]} - ${option[this.selectBy]}`
-          : `${option[this.selectBySecond]} - ${option[this.selectBy]}`
+          ? this.selectByGlAccount
+          ? `${this.getNameWithGLAccount(option)}`
+          : `${option[this.selectBySecond]} — ${option[this.selectBy]}`
           : `${option[this.selectBy]}`
 
+        if (isDbClick) {
+          this.open = false
+        }
         this.options.forEach((item, key) => {
           if(item[this.selectBySecond] === option[this.selectBySecond]) {
             this.optionIndex = key
@@ -415,6 +427,9 @@ export default {
 }
 
 .selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   height: 100%;
   padding: 10px 36px 10px 8px;
   background: #fff;
@@ -501,6 +516,12 @@ export default {
     color: #fff;
     background-color: $firebrick;
   }
+  
+  div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .input {
@@ -527,7 +548,8 @@ export default {
   float: right;
   width: auto;
   // min-width: 4.2rem;
-  margin-left: 2rem;
-  font-weight: bold;
+  margin-left: 3rem;
+  font-size: 16px;
+  font-weight: 800;
 }
 </style>

@@ -39,9 +39,9 @@
               v-if="glAccounts"
               v-model="glAccount"
               :options="glAccounts"
-              :custom-label="nameWithId"
-              placeholder="-- Select --"
-              track-by="name"
+              :custom-label="glAccountName"
+              placeholder=""
+              track-by="id"
               :preselect-first="false"
               :show-labels="false"
             ></multiselect>
@@ -56,12 +56,28 @@
               v-if="glAccount && !glAccount.parent"
               v-model="glSubAccount"
               :options="glAccount.child"
-              :custom-label="nameWithId"
-              placeholder="-- Select --"
-              track-by="name"
-              :preselect-first="false"
+              :custom-label="glAccountName"
+              placeholder=""
+              track-by="id"
+              :preselect-first="true"
               :show-labels="false"
             ></multiselect>
+          </template>
+        </InputWithTitle>
+
+        <InputWithTitle v-if="glAccount">
+          <template #title> Name </template>
+
+          <template #input>
+            <CustomInput :value="glAccount && !glAccount.parent && glSubAccount ? glSubAccount.name : glAccount.name" readonly disabled />
+          </template>
+        </InputWithTitle>
+
+        <InputWithTitle v-if="glAccount">
+          <template #title> Type </template>
+
+          <template #input>
+            <CustomInput :value="glAccount.glTypeCode && glAccount.glTypeCode.description" readonly disabled />
           </template>
         </InputWithTitle>
       </InputRow>
@@ -77,7 +93,7 @@
       Cancel
     </DefaultButton>
 
-    <ValidationObserver v-if="!isAttachGlAccounts" ref="form">
+    <ValidationObserver ref="form">
       <div>
         <div class="gl-table">
           <div v-if="(unit.glAccounts && unit.glAccounts.length) || searchAccount" class="gl-account-area">
@@ -105,9 +121,9 @@
               <div class="table-row">
                 <!-- <span>ID</span> -->
 
-                <span>GL account ID - GL account Name</span>
+                <span> GL </span>
 
-                <span>GL sub account ID - GL sub account Name</span>
+                <span> Name </span>
 
                 <span> Type </span>
 
@@ -123,15 +139,9 @@
               >
                 <!-- <span>{{ glAcc.id }}</span> -->
 
-                <span v-if="!glAcc.parent">{{
-                  `${glAcc.id} - ${glAcc.name}`
-                }}</span>
-                <span v-else></span>
+                <span>{{ `${getItemIdWithGLAccount(glAcc)}` }}</span>
 
-                <div v-if="glAcc.parent">
-                  {{ `${glAcc.id} - ${glAcc.name}` }}
-                </div>
-                <div v-else></div>
+                <span>{{ `${glAcc.name}` }}</span>
 
                 <span v-if="glAcc.parent">{{
                   glAcc.parent.glTypeCode && glAcc.parent.glTypeCode.description
@@ -278,6 +288,7 @@ import CustomTableAddIcon from './CustomTableAddIcon.vue'
 import DefaultButton from './DefaultButton.vue'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import { tableActionsMixin } from '~/mixins/tableActionsMixin'
+import { glAccountMixin } from '~/mixins/glAccountMixin'
 export default {
   name: 'HQUnitGLMaintenance',
   components: {
@@ -300,7 +311,7 @@ export default {
       query: GlAccounts,
     },
   },
-  mixins: [mutationMixin, tableActionsMixin],
+  mixins: [mutationMixin, tableActionsMixin, glAccountMixin],
   data() {
     return {
       unit: '',
@@ -351,7 +362,7 @@ export default {
       // this.fetchAccountData()
     },
     glAccount() {
-      this.glSubAccount = ''
+      this.glSubAccount = this.glAccount && this.glAccount.child ? this.glAccount.child[0] : ''
     },
     searchGlType() {
       clearTimeout(this.timeout)
@@ -388,12 +399,22 @@ export default {
         return `${code} — ${name}`
       }
     },
+    glAccountName({ name, itemId, id }) {
+      if(itemId === undefined) {
+        return `${id} — ${name}`
+      }else {
+        return `${itemId} - ${name}`
+      }
+    },
     showAttachGlAccounts() {
       this.isAttachGlAccounts = true
     },
     cancelAttach() {
-      this.isAttachGlAccounts = false
       this.unit = ''
+      this.isAttachGlAccounts = false
+      this.cancelGLAccount()
+    },
+    cancelGLAccount() {
       this.glAccount = ''
       this.glSubAccount = ''
     },
@@ -500,10 +521,11 @@ export default {
       this.searchType = searchType
       this.glTypeCodes = glTypeCodes
 
+      console.log(this.unitsByGLAccount)
       console.log(updateUnit)
       if (updateUnit) {
         this.unit = updateUnit
-        this.cancelAttach()
+        this.cancelGLAccount()
       }
     },
     async removeGlFromUnit(glAccount) {
@@ -605,17 +627,6 @@ export default {
   background: url(assets/images/icons/chevron-down.svg);
   display: block;
   top: 0;
-}
-
-.input-row {
-  @media screen and (max-width: $sm) {
-    flex-direction: column;
-
-    div:first-child {
-      margin-right: 0px !important;
-      margin-bottom: 16px;
-    }
-  }
 }
 </style>
 <style lang="scss" scoped>

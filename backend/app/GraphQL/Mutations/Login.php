@@ -11,6 +11,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\Contracts\HasApiTokens;
 use Nuwave\Lighthouse\Exceptions\AuthenticationException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use App\Models\User;
 
 class Login
 {   
@@ -37,7 +38,12 @@ class Login
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             throw new AuthenticationException("The provided email is not verified.");
         }
-        
+
+        $userVerified = User::where('email', $args['email'])->first();
+        if (!$userVerified['is_admin'] && !$userVerified['is_active']) {
+            throw new AuthenticationException("The provided email is not active");
+        }
+
         if (!$user instanceof HasApiTokens) {
             throw new ApiTokensException($user);
         }

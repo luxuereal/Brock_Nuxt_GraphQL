@@ -25,7 +25,7 @@
             :key="reAccrual.id"
             class="table-row table-content-row"
           >
-            <span> {{ reAccrual.glAccount.id }} </span>
+            <span> {{ getItemIdWithGLAccount(reAccrual.glAccount) }} </span>
 
             <span v-if="reAccrual.glAccount">
               {{ reAccrual.glAccount.name }}
@@ -58,6 +58,7 @@ import { tableActionsMixin } from '~/mixins/tableActionsMixin'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import { formatDateFromAPI } from '~/helpers/helpers'
 import DeleteExpense from '~/graphql/mutations/expense/deleteExpense.gql'
+import { glAccountMixin } from '~/mixins/glAccountMixin'
 import { meMixin } from '~/mixins/meMixin'
 import ExpenseTypes from '~/graphql/queries/expenseTypes.gql'
 import ReAccruals from '~/graphql/queries/reAccruals.gql'
@@ -78,7 +79,7 @@ export default {
       query: RolePrivileges,
     },
   },
-  mixins: [tableActionsMixin, mutationMixin, meMixin],
+  mixins: [tableActionsMixin, mutationMixin, meMixin, glAccountMixin],
   data () {
     return {
       canManage: false

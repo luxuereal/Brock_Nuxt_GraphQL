@@ -48,6 +48,11 @@ class Purchase extends Model
         return $this->belongsTo(Unit::class);
     }
 
+    public function period(): BelongsTo
+    {
+        return $this->belongsTo(Period::class);
+    }
+
     /**
      * Get the vendor owns the purchase.
      */
