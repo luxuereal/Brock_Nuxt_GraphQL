@@ -109,7 +109,7 @@
           </template>
         </InputWithTitle>
         <InputWithTitle>
-          <template #title>Sysco</template>
+          <template #title>Preferred Vendor #</template>
 
           <template #input>
             <CustomInput v-model="sysco" rules="max:255" name="unit-sysco" />

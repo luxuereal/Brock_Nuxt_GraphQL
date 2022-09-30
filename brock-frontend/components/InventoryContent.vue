@@ -25,7 +25,7 @@
               class="table-row"
             >
               <span class="table-text">
-                {{ item.id }}
+                {{ item.itemId }}
               </span>
 
               <span class="table-text">
@@ -95,6 +95,8 @@ import InventoryCategories from '~/graphql/queries/inventoryCategories.gql'
 import UpdateInventories from '~/graphql/mutations/inventoryCategories/updateInventories.gql'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import RolePrivileges from "~/graphql/queries/RolePrivileges.gql";
+import Me from '~/graphql/queries/me.query.gql'
+
 export default {
   name: 'InventoryContent',
   components: {
@@ -137,7 +139,7 @@ export default {
     },
   },
   beforeMount () {
-    this.fetchData();
+    this.fetchData()
   },
   mounted () {
     // this.canManage = !!this.RolePrivileges.filter(privilege => {
@@ -151,12 +153,23 @@ export default {
       item.inventoryAmount.current = Number(value === '' ? 0 : value).toFixed(2);
     },
     async fetchData() {
-      const {
-        data: { inventoryCategories },
+      const { 
+        data: { me }
+      } = await this.$apollo.query({
+        query: Me,
+        fetchPolicy: 'network-only'
+      });
+      
+      const { 
+        data: { inventoryCategories }
       } = await this.$apollo.query({
         query: InventoryCategories,
         fetchPolicy: 'no-cache',
-      })
+        variables: {
+          vending: me.selectedUnit.isVending ? "N" : "Y" 
+        }
+      });
+
       for ( const item of inventoryCategories ) {
         const value = item.inventoryAmount.current;
         item.inventoryAmount.current = Number(value === '' ? 0 : value).toFixed(2);

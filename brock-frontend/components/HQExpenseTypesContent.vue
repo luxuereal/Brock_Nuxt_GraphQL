@@ -8,6 +8,8 @@
             <span> Name </span>
 
             <span> Description </span>
+
+            <span style="text-align:center;"> Available on dropdown </span>
           </div>
         </template>
 
@@ -34,6 +36,20 @@
               name='"ExpenseType Description"'
             />
             <span v-else>{{ expenseType.description }}</span>
+
+            <CustomRadioButton 
+              v-if="isEdit === expenseType.id"
+              class="radio-center"
+              :is-active="expenseTypeEdit.availableOnDropdown"
+              :disabled="isEdit !== expenseType.id"
+              @set-is-active="setIsAvailableEdit"
+            />
+            <CustomRadioButton
+              v-else
+              class="radio-center"
+              :is-active="expenseType.availableOnDropdown"
+              :disabled="isEdit !== expenseType.id"
+            />
 
             <CustomTableIconsColumn
               :is-edit-active="isEdit === expenseType.id"
@@ -97,6 +113,12 @@
               rules="required"
               do-not-show-error-message
               name='"ExpenseType Description"'
+            />
+
+            <CustomRadioButton
+              class="radio-center"
+              :is-active="expenseTypeNew.availableOnDropdown"
+              @set-is-active="setIsAvailable"
             />
           </CustomTableRow>
 
@@ -173,6 +195,7 @@ export default {
       expenseTypeNew: {
         type: '',
         description: '',
+        availableOnDropdown: false,
       },
       expenseTypeEdit: {},
     }
@@ -181,6 +204,12 @@ export default {
     this.fetchData();
   },
   methods: {
+    setIsAvailableEdit() {
+      this.expenseTypeEdit.availableOnDropdown = !this.expenseTypeEdit.availableOnDropdown
+    },
+    setIsAvailable() {
+      this.expenseTypeNew.availableOnDropdown = !this.expenseTypeNew.availableOnDropdown
+    },
     editExpenseType(expenseType) {
       this.expenseTypeEdit = Object.assign({}, expenseType)
       this.edit(expenseType.id)
@@ -189,6 +218,7 @@ export default {
       this.expenseTypeNew = {
         type: '',
         description: '',
+        availableOnDropdown: false,
       }
       this.addRow()
     },
@@ -199,6 +229,7 @@ export default {
           expenseTypeInput: {
             type: this.expenseTypeNew.type,
             description: this.expenseTypeNew.description,
+            availableOnDropdown: this.expenseTypeNew.availableOnDropdown,
           },
         },
         null,
@@ -218,6 +249,7 @@ export default {
         id: expenseType.id,
         type: this.expenseTypeEdit.type,
         description: this.expenseTypeEdit.description,
+        availableOnDropdown: this.expenseTypeEdit.availableOnDropdown,
       }
 
       const res = await this.mutationAction(
@@ -226,6 +258,7 @@ export default {
         null,
         'Edit expense type success',
         'Edit expense type error',
+
         null,
         true
       )
@@ -265,10 +298,10 @@ export default {
   column-gap: 30px;
   padding: 12px 0;
   @media screen and (min-width: $lg) {
-    grid-template-columns: 40% 40% auto;
+    grid-template-columns: 35% 35% 15% auto;
   }
   @media screen and (max-width: $lg) {
-    grid-template-columns: 200px 200px auto;
+    grid-template-columns: 250px 250px 200px auto;
   }
 }
 
@@ -287,5 +320,9 @@ export default {
 
 .icon--add {
   grid-column: 5;
+}
+
+.radio-center {
+  flex-direction: column;
 }
 </style>

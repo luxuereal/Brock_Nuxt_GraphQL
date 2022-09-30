@@ -39,15 +39,15 @@
           <DefaultButton
             button-color-gamma="red"
             :disabled="invalid"
-            @event="payrollAction"
+            @event="createPayroll"
           >
             Save
           </DefaultButton>
 
           <DefaultButton
             button-color-gamma="white"
-            :disabled="pristine && !getIsEdit"
-            @event="getIsEdit ? cancelEdit() : cancelCreate()"
+            :disabled="pristine"
+            @event="cancelCreate()"
           >
             Cancel
           </DefaultButton>
@@ -68,7 +68,6 @@ import CustomInput from './CustomInput.vue'
 import CustomTextarea from './CustomTextarea.vue'
 import DefaultButton from './DefaultButton.vue'
 import PageSubHeaderContent from './PageSubHeaderContent.vue'
-import { PAYROLL } from '~/constants/payroll'
 import { mutationMixin } from '~/mixins/mutationMixin'
 import ExpenseTypes from '~/graphql/queries/expenseTypes.gql'
 import GlAccounts from '~/graphql/queries/glAccounts.gql'
@@ -97,8 +96,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getIsEdit: 'payroll/getIsEdit',
-      getId: 'payroll/getId',
       getAmount: 'payroll/getAmount',
       getComments: 'payroll/getComments',
     }),
@@ -126,48 +123,42 @@ export default {
     },
   },
   destroyed() {
-    this.$store.commit('payroll/SET_IS_EDIT', false)
     this.cancelCreate()
   },
   methods: {
-    payrollAction() {
-      this.getIsEdit ? this.updatePayroll() : this.createPayroll()
-    },
     async createPayroll() {
         const currentDate = new Date().toJSON().slice(0,10).replace(/-/g,'-')
 
         const res = await this.mutationAction(
-            CreateExpense,
-            {
-                expenseInput: {
-                    comments: this.comments,
-                    expenseDate: currentDate,
-                    glAccount: {
-                        connect: this.getGLAccount.id,
-                    },
-                    expenseType: {
-                        connect: this.getPayroll.id,
-                    },
-                    amount: String(this.amount),
-                },
-            },
-            null,
-            'Add Payroll Success',
-            'Add Payroll Error',
-            {
-                activePeriod: true,
-            }
+          CreateExpense,
+          {
+              expenseInput: {
+                  comments: this.comments,
+                  expenseDate: currentDate,
+                  glAccount: {
+                      connect: this.getGLAccount.id,
+                  },
+                  expenseType: {
+                      connect: this.getPayroll.id,
+                  },
+                  amount: String(this.amount),
+              },
+          },
+          null,
+          'Add Payroll Success',
+          'Add Payroll Error',
+          {
+              activePeriod: true,
+          }
         )
         if (res) {
           this.cancelCreate()
         }
     },
-    updatePayroll() {},
     cancelCreate() {
       this.cancelEvent()
-      this.$store.commit('payroll/SET_PAYROLL', { ...PAYROLL })
+      this.$store.commit('payroll/SET_PAYROLL', {amount: '', comments: ''})
     },
-    cancelEdit() {},
   }
 }
 </script>

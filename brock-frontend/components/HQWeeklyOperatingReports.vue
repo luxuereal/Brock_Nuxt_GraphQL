@@ -137,7 +137,9 @@ export default {
         true
       )
 
-      window.open(operatingReport)
+      console.log(operatingReport)
+
+      // window.open(operatingReport)
     },
   },
 }

@@ -9,6 +9,7 @@ query UnitsByGLAccount {
         ...GlAccountFragment
         parent {
             id
+            itemId
             name
             glTypeCode {
                 id
@@ -17,6 +18,7 @@ query UnitsByGLAccount {
         }
         child {
             id
+            itemId
             name
         }
     }

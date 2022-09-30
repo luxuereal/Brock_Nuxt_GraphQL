@@ -20,7 +20,7 @@ type Vendor {
 
 input CreateVendorInput {
     "Code."
-    code: String! @rules(apply: ["required", "max:255"])
+    code: String! @rules(apply: ["required", "max:255", "unique:vendors,code"])
 
     "Name."
     name: String! @rules(apply: ["required", "max:255"])

@@ -5,6 +5,8 @@
       <CustomTable v-else :w-table="780">
         <template #header>
           <div class="table-row">
+            <span> ID </span>
+
             <span> Name </span>
 
             <span> GL account </span>
@@ -21,6 +23,15 @@
           >
             <CustomInput
               v-if="isEdit === inventoryCategory.id"
+              v-model="inventoryCategoryEdit.itemId"
+              rules="required|max:255"
+              do-not-show-error-message
+              name='"InventoryCategory ID"'
+            />
+            <span v-else>{{ inventoryCategory.itemId }}</span>
+
+            <CustomInput
+              v-if="isEdit === inventoryCategory.id"
               v-model="inventoryCategoryEdit.name"
               rules="required|max:255"
               do-not-show-error-message
@@ -33,6 +44,8 @@
               v-model="inventoryCategoryEdit.glAccount"
               :options="glAccounts"
               select-by="name"
+              select-by-second="itemId"
+              select-by-gl-account="glAccount"
               :selected-item="
                 glAccounts.find((glAccount) =>
                   inventoryCategory.glAccountId
@@ -41,7 +54,7 @@
                 )
               "
             />
-            <span v-else>{{ inventoryCategory.glAccount.name }}</span>
+            <span v-else>{{ getNameWithGLAccount(inventoryCategory.glAccount) }}</span>
 
             <CustomInput
               v-if="isEdit === inventoryCategory.id"
@@ -103,6 +116,13 @@
 
           <CustomTableRow v-if="isAdd" class="table-row">
             <CustomInput
+              v-model="inventoryCategoryNew.itemId"
+              rules="required|max:255"
+              do-not-show-error-message
+              name='"InventoryCategory ID"'
+            />
+
+            <CustomInput
               v-model="inventoryCategoryNew.name"
               rules="required|max:255"
               do-not-show-error-message
@@ -114,6 +134,9 @@
               v-model="inventoryCategoryNew.glAccount"
               :options="glAccounts"
               select-by="name"
+              select-by-second="itemId"
+              select-by-gl-account="glAccount"
+              input-select
             />
 
             <CustomInput
@@ -163,6 +186,7 @@ import { tableActionsMixin } from '~/mixins/tableActionsMixin'
 import { submitMessagesMixin } from '~/mixins/submitMessagesMixin'
 import { formMixin } from '~/mixins/formMixin'
 import { mutationMixin } from '~/mixins/mutationMixin'
+import { glAccountMixin } from '~/mixins/glAccountMixin'
 
 // pagination
 import { paginatorMixin } from '~/mixins/paginatorMixin'
@@ -184,7 +208,7 @@ export default {
     PaginationInput,
     // pagination
   },
-  mixins: [submitMessagesMixin, formMixin, mutationMixin, tableActionsMixin, paginatorMixin],
+  mixins: [submitMessagesMixin, formMixin, mutationMixin, tableActionsMixin, paginatorMixin, glAccountMixin],
   apollo: {
     glAccounts: {
       query: GlAccounts,
@@ -200,6 +224,7 @@ export default {
       // pagination
 
       inventoryCategoryNew: {
+        itemId: '',
         name: '',
         glAccount: '',
         vending: '',
@@ -217,6 +242,7 @@ export default {
     },
     addInventoryCategoryRow() {
       this.inventoryCategoryNew = {
+        itemId: '',
         name: '',
         glAccount: '',
         vending: '',
@@ -228,6 +254,7 @@ export default {
         CreateInventoryCategory,
         {
           inventoryCategoryInput: {
+            itemId: this.inventoryCategoryNew.itemId,
             name: this.inventoryCategoryNew.name,
             glAccount: {
               connect: this.inventoryCategoryNew.glAccount.id,
@@ -248,8 +275,10 @@ export default {
       // pagination
     },
     async confirmEdit(inventoryCategory) {
+      console.log(this.inventoryCategoryEdit.itemId)
       const editedInventoryCategory = {
         id: inventoryCategory.id,
+        itemId: this.inventoryCategoryEdit.itemId,
         name: this.inventoryCategoryEdit.name,
         glAccount: {
           connect: this.inventoryCategoryEdit.glAccount.id,
@@ -304,10 +333,10 @@ export default {
   column-gap: 30px;
   padding: 12px 0;
   @media screen and (min-width: $lg) {
-    grid-template-columns: 30% 30% 10% auto;
+    grid-template-columns: 10% 25% 35% 10% auto;
   }
   @media screen and (max-width: $lg) {
-    grid-template-columns: 200px 200px 100px auto;
+    grid-template-columns: 100px 150px 250px 100px auto;
   }
 }
 

@@ -77,7 +77,7 @@ export const HOME_NAV_TABS = [
   },
   {
     id: 9,
-    caption: 'Payroll',
+    caption: 'Payroll Adjustment',
     pageUrl: '/home/payroll',
     iconSrc: require('assets/images/icons/home/payroll.svg'),
     permission: {

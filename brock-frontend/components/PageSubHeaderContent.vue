@@ -1,7 +1,7 @@
 <template>
   <PageSubheader>
     <PageSubheaderItem>
-      <template #title>{{ selectedUnit && selectedUnit.id }}</template>
+      <template #title>{{ selectedUnit && selectedUnit.code }}</template>
 
       <template #subtitle>Unit Number</template>
     </PageSubheaderItem>

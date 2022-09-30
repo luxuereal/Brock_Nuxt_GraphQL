@@ -2,6 +2,9 @@ type GlAccount {
     "Unique primary key."
     id: ID!
 
+    "Item ID."
+    itemId: String! @rename(attribute: "item_id")
+
     "Name."
     name: String!
 
@@ -22,6 +25,9 @@ type GlAccount {
 }
 
 input CreateGlAccountInput {
+    "Item ID."
+    itemId: String! @rename(attribute: "item_id") @rules(apply: ["required", "unique:gl_accounts,item_id"])
+
     "Name."
     name: String! @rules(apply: ["required", "max:255"])
 
@@ -35,6 +41,9 @@ input CreateGlAccountInput {
 input UpdateGlAccountInput {
     "Id."
     id: ID! @eq
+
+    "Item ID."
+    itemId: String! @rename(attribute: "item_id") @rules(apply: ["required", "exists:gl_accounts,item_id"])
 
     "Name."
     name: String @rules(apply: ["filled", "max:255"])
@@ -58,7 +67,7 @@ input ConnectBelongsToParentGlAccount @validator {
 
 extend type Query {
     "List multiple gl accounts."
-    glAccounts: [GlAccount!]! 
+    glAccounts: [GlAccount!]!
         @all
         @guard
 }
@@ -68,7 +77,7 @@ extend type Mutation {
     createGlAccount(
         "Gl Account."
         GlAccountInput: CreateGlAccountInput! @spread
-    ): GlAccount 
+    ): GlAccount
         @create
         @guard
         @can(ability: "create")
@@ -77,7 +86,7 @@ extend type Mutation {
     updateGlAccount(
         "Gl Account."
         GlAccountInput: UpdateGlAccountInput! @spread
-    ): GlAccount 
+    ): GlAccount
         @update
         @guard
         @can(ability: "update", query: true)
@@ -86,7 +95,7 @@ extend type Mutation {
     deleteGlAccount(
         "Id."
         id: ID! @eq
-    ): GlAccount 
+    ): GlAccount
         @delete
         @guard
         @can(ability: "delete", query: true)

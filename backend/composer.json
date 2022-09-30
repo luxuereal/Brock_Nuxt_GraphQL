@@ -13,8 +13,10 @@
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "mll-lab/laravel-graphql-playground": "^2.6",
+        "mpdf/mpdf": "^6.1",
         "nuwave/lighthouse": "^5.45",
-        "rap2hpoutre/laravel-log-viewer": "^2.2"
+        "rap2hpoutre/laravel-log-viewer": "^2.2",
+        "spipu/html2pdf": "^4.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -2,6 +2,9 @@ type InventoryCategory {
     "Unique primary key."
     id: ID!
 
+    "Item ID."
+    itemId: String! @rename(attribute: "item_id")
+
     "Name."
     name: String!
 
@@ -30,6 +33,9 @@ type InventoryAmount {
 }
 
 input CreateInventoryCategoryInput {
+    "Item ID."
+    itemId: String! @rename(attribute: "item_id") @rules(apply: ["required", "unique:inventory_categories,item_id"])
+
     "Name."
     name: String! @rules(apply: ["required", "max:255"])
 
@@ -43,6 +49,9 @@ input CreateInventoryCategoryInput {
 input UpdateInventoryCategoryInput {
     "Unique primary key."
     id: ID! @eq
+
+    "Item ID."
+    itemId: String! @rename(attribute: "item_id") @rules(apply: ["required", "exists:inventory_categories,item_id"])
 
     "Name."
     name: String @rules(apply: ["filled", "max:255"])

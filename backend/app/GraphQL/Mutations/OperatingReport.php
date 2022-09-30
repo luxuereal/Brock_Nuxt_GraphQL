@@ -16,6 +16,10 @@ use App\Enums\OperatingPeriodType;
 use App\Enums\OperatingType;
 use App\Enums\PermissionStatus;
 
+require public_path().'/../vendor/autoload.php';
+
+use Spipu\Html2Pdf\Html2Pdf;
+
 class OperatingReport
 {   
     use ManagesAuth;
@@ -33,45 +37,45 @@ class OperatingReport
         // use policy logic here, cause we can't apply separate class to that (it's not a resource)
 
         // retrieve user
-        $user = static::authenticatedUser();
+        // $user = static::authenticatedUser();
 
-        $roleId = $user->role_id;
-        $menu = DB::table('menus')->where('slug_name', '=', 'reports')->first();
-        if ( $roleId == null || $menu == null ) {
-            return url("/");
-        }
-        $roleMenu = DB::table('role_menus')->where('role_id', '=', $roleId)->where('menu_id', '=', $menu->id)->first();
-        if ( $roleMenu == null ) {
-            return url("/");
-        }
-        $permission = $roleMenu->is_create;
+        // $roleId = $user->role_id;
+        // $menu = DB::table('menus')->where('slug_name', '=', 'reports')->first();
+        // if ( $roleId == null || $menu == null ) {
+        //     return url("/");
+        // }
+        // $roleMenu = DB::table('role_menus')->where('role_id', '=', $roleId)->where('menu_id', '=', $menu->id)->first();
+        // if ( $roleMenu == null ) {
+        //     return url("/");
+        // }
+        // $permission = $roleMenu->is_create;
 
-        if ( $permission == PermissionStatus::NOTALLOWED ) {
-            return url("/");
-        }
+        // if ( $permission == PermissionStatus::NOTALLOWED ) {
+        //     return url("/");
+        // }
         
-        // Gate::allowIf(fn ($user) => $user->isAdministrator());
+        // // Gate::allowIf(fn ($user) => $user->isAdministrator());
 
-        $userId = $user->id;
+        // $userId = $user->id;
         
-        $periodId = $args['period'];
-        $period = Period::findOrFail($periodId);
+        // $periodId = $args['period'];
+        // $period = Period::findOrFail($periodId);
 
-        $unitId = $args['unit'];
-        $unit = Unit::findOrFail($unitId);
+        // $unitId = $args['unit'];
+        // $unit = Unit::findOrFail($unitId);
 
-        $type = $args['type'];
-        $typePeriod = $args['typePeriod'];
+        // $type = $args['type'];
+        // $typePeriod = $args['typePeriod'];
 
-        /* $type
-        const WEEKLY = 'weekly';
-        const MONTHLY = 'monthly';
-        */
-        if ( $type == OperatingPeriodType::WEEKLY ) {
-            return url("weekly_report");
-        } else if ( $type == OperatingPeriodType::MONTHLY ) {
-            return url("monthly_report");
-        }
+        // /* $type
+        // const WEEKLY = 'weekly';
+        // const MONTHLY = 'monthly';
+        // */
+        // if ( $type == OperatingPeriodType::WEEKLY ) {
+        //     return url("weekly_report");
+        // } else if ( $type == OperatingPeriodType::MONTHLY ) {
+        //     return url("monthly_report");
+        // }
 
         /* $typePeriod
         const OPERATING = 'operating';
@@ -85,6 +89,11 @@ class OperatingReport
         const LABOR = 'labor';
         */
 
-        return url("userId:{$userId},periodId:{$periodId},unitId:{$unitId},type:{$type},typePeriod:{$typePeriod}");
+        $html2pdf = new Html2Pdf();
+        $html2pdf->writeHTML('<h1 style="color:pink;">CodeWall PDF</h1> <br/> <p>Convert this HTML to PDF please!</p>');
+        $html2pdf->output('myPdf.pdf');
+
+        // return url("userId:{$userId},periodId:{$periodId},unitId:{$unitId},type:{$type},typePeriod:{$typePeriod}");
+        return '';
     }
 }

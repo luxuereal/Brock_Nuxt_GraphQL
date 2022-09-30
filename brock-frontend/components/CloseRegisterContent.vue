@@ -3,7 +3,7 @@
     <PageSubheader>
       <PageSubheaderItem>
         <template v-if="me" #title>{{
-          me.selectedUnit && me.selectedUnit.id
+          me.selectedUnit && me.selectedUnit.code
         }}</template>
 
         <template #subtitle>Unit Number</template>
